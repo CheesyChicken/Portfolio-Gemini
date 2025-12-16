@@ -62,6 +62,10 @@ const GestureController = ({ onGesture, isActive }) => {
         }
     }, [isActive]);
 
+    // Previous hand position for tracking movement
+    const prevHandPos = useRef({ x: 0, y: 0 });
+    const prevPinchDistance = useRef(0);
+
     // Detection Loop
     const detectHands = async () => {
         // Always schedule next frame if active
@@ -77,26 +81,57 @@ const GestureController = ({ onGesture, isActive }) => {
                     const hand = predictions[0];
                     const landmarks = hand.landmarks;
 
-                    // Thumb tip: 4, Index tip: 8
+                    // Thumb tip: 4, Index tip: 8, Middle finger tip: 12, Wrist: 0
                     const thumbTip = landmarks[4];
                     const indexTip = landmarks[8];
+                    const middleTip = landmarks[12];
+                    const wrist = landmarks[0];
 
-                    const distance = Math.sqrt(
+                    // Calculate palm center for position tracking
+                    const palmCenterX = (wrist[0] + indexTip[0] + middleTip[0]) / 3;
+                    const palmCenterY = (wrist[1] + indexTip[1] + middleTip[1]) / 3;
+
+                    // Pinch distance for zoom
+                    const pinchDistance = Math.sqrt(
                         Math.pow(thumbTip[0] - indexTip[0], 2) +
                         Math.pow(thumbTip[1] - indexTip[1], 2)
                     );
 
                     // Map distance to expansion (0 to 1)
-                    const expansion = Math.min(Math.max((distance - 20) / 130, 0), 1);
+                    const expansion = Math.min(Math.max((pinchDistance - 20) / 130, 0), 1);
+
+                    // Calculate hand movement delta
+                    const deltaX = palmCenterX - prevHandPos.current.x;
+                    const deltaY = palmCenterY - prevHandPos.current.y;
+
+                    // Calculate zoom change (pinch in/out)
+                    const zoomDelta = prevPinchDistance.current > 0 
+                        ? (pinchDistance - prevPinchDistance.current) / 50 
+                        : 0;
+
+                    // Calculate rotation based on horizontal hand movement
+                    const rotationDelta = deltaX * 0.01;
 
                     onGesture({
                         expansion: expansion,
                         hasHand: true,
-                        detected: true
+                        detected: true,
+                        position: { x: palmCenterX, y: palmCenterY },
+                        delta: { x: deltaX, y: deltaY },
+                        zoom: zoomDelta,
+                        rotation: rotationDelta,
+                        pinchDistance: pinchDistance
                     });
-                    setStatus("Hand Detected");
+
+                    // Update previous positions
+                    prevHandPos.current = { x: palmCenterX, y: palmCenterY };
+                    prevPinchDistance.current = pinchDistance;
+
+                    setStatus("Hand Tracking");
                 } else {
                     onGesture({ hasHand: false, detected: false });
+                    prevHandPos.current = { x: 0, y: 0 };
+                    prevPinchDistance.current = 0;
                     setStatus("Scanning...");
                 }
             } catch (err) {
@@ -142,8 +177,9 @@ const GestureController = ({ onGesture, isActive }) => {
                     {status}
                 </div>
                 <div className="text-[9px] text-gray-500 mt-1 text-center w-full leading-tight">
-                    Pinch to Compress<br />
-                    Open to Expand
+                    Pinch: Zoom In/Out<br />
+                    Move: Pan Camera<br />
+                    Swipe: Rotate 360°
                 </div>
             </div>
         </div>

@@ -15,18 +15,9 @@ const Projects = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-12 md:mb-16 text-center px-4"
                 >
-                    <div className="flex items-center justify-center gap-3 md:gap-4 mb-3 md:mb-4">
-                        <h2 className="text-3xl md:text-5xl font-bold text-text">Selected Work</h2>
-                        <motion.img
-                            src="/thinking_avatar.png"
-                            alt="Thinking"
-                            className="w-16 h-16 md:w-24 md:h-24 -mt-6 md:-mt-8"
-                            animate={{ rotate: [0, 10, -10, 0] }}
-                            transition={{ duration: 5, repeat: Infinity }}
-                        />
-                    </div>
+                    <h2 className="text-3xl md:text-5xl font-bold text-text mb-4">Selected Work</h2>
                     <p className="text-text-secondary max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
-                        A collection of projects that demonstrate my passion for AI and data engineering.
+                        A collection of projects that demonstrate my expertise in AI, LLMs, and data engineering.
                     </p>
                 </motion.div>
 

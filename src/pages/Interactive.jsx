@@ -15,6 +15,10 @@ const Interactive = () => {
     const [handPresent, setHandPresent] = useState(false);
     const [text, setText] = useState("AURA");
     const [inputText, setInputText] = useState("");
+    
+    // New states for camera control
+    const [cameraPosition, setCameraPosition] = useState({ x: 0, y: 0, z: 30 });
+    const [cameraRotation, setCameraRotation] = useState(0);
 
     const shapes = [
         { type: ParticleShapeType.HEART, icon: Heart, label: 'Heart' },
@@ -53,6 +57,28 @@ const Interactive = () => {
                 const diff = gestureData.expansion - prev;
                 return prev + diff * 0.1;
             });
+
+            // Update camera position based on hand movement (pan)
+            if (gestureData.delta) {
+                setCameraPosition(prev => ({
+                    x: prev.x + gestureData.delta.x * 0.05,
+                    y: prev.y - gestureData.delta.y * 0.05, // Invert Y for natural movement
+                    z: prev.z
+                }));
+            }
+
+            // Update camera zoom based on pinch
+            if (gestureData.zoom) {
+                setCameraPosition(prev => ({
+                    ...prev,
+                    z: Math.max(10, Math.min(50, prev.z - gestureData.zoom * 5))
+                }));
+            }
+
+            // Update rotation based on swipe
+            if (gestureData.rotation) {
+                setCameraRotation(prev => prev + gestureData.rotation);
+            }
         } else {
             if (handPresent) {
                 // Hand lost: Revert to Chaos
@@ -81,8 +107,15 @@ const Interactive = () => {
 
             {/* 3D Viewport */}
             <div className="absolute inset-0 z-0">
-                <Canvas camera={{ position: [0, 0, 30], fov: 45 }}>
-                    <CosmicScene shape={shape} color={color} expansion={expansion} text={text} />
+                <Canvas camera={{ position: [cameraPosition.x, cameraPosition.y, cameraPosition.z], fov: 45 }}>
+                    <CosmicScene 
+                        shape={shape} 
+                        color={color} 
+                        expansion={expansion} 
+                        text={text}
+                        cameraPosition={cameraPosition}
+                        cameraRotation={cameraRotation}
+                    />
                 </Canvas>
             </div>
 

@@ -29,40 +29,37 @@ export const portfolioData = {
         {
             id: 1,
             title: "3x Hackathon Winner",
-            description: "Secured top positions in national-level hackathons by building innovative AI-driven solutions under tight deadlines.",
-            icon: Award,
-            image: "https://images.unsplash.com/photo-1596496050844-961f5518995b?auto=format&fit=crop&q=80&w=800"
+            description: "Secured top positions in national-level hackathons including Smart India Hackathon, building innovative AI-driven solutions under tight deadlines with teams of 5-6 members.",
+            icon: Award
         },
         {
             id: 2,
             title: "AI Innovation Leader",
-            description: "Spearheaded the adoption of Generative AI tools at LTIMindtree, increasing developer productivity by 40%.",
-            icon: Zap,
-            image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=800"
+            description: "Spearheaded the adoption of Generative AI tools and LLM-based solutions at LTIMindtree, increasing developer productivity by 40% and delivering 3 major GenAI projects for Fortune 500 clients.",
+            icon: Zap
         },
         {
             id: 3,
             title: "Open Source Contributor",
-            description: "Active contributor to major open-source AI frameworks, focusing on agentic workflows and RAG optimization.",
-            icon: Star,
-            image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=800"
+            description: "Active contributor to major open-source AI frameworks and tools, focusing on agentic workflows, RAG optimization, and building practical LLM applications for the community.",
+            icon: Star
         }
     ],
     story: [
         {
             title: "The Spark",
             description: "It started with a simple question: 'Can computers think?' This curiosity led me from writing basic scripts to exploring the depths of neural networks and autonomous agents.",
-            image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800"
+            image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&q=80&w=800"
         },
         {
             title: "The Evolution",
             description: "As I mastered Data Engineering, I realized that data is the fuel, but AI is the engine. I pivoted to specialize in LLMs, building systems that don't just process data, but understand it.",
-            image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800"
+            image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=800"
         },
         {
             title: "The Mission",
             description: "Now, I'm on a mission to democratize AI. Whether it's through building intuitive agents or scalable pipelines, I create technology that empowers people to do more.",
-            image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=800"
+            image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=800"
         }
     ],
     lifeLocations: [
@@ -131,7 +128,7 @@ export const portfolioData = {
             description: "A robust framework for building multi-agent systems capable of complex reasoning and task execution. Features include memory management, tool use, and self-correction.",
             tags: ["Python", "LangChain", "OpenAI", "FastAPI"],
             link: "https://github.com/cheesychicken",
-            image: "/project_ai_agent.png"
+            image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800"
         },
         {
             id: 2,
@@ -139,7 +136,7 @@ export const portfolioData = {
             description: "High-performance Retrieval-Augmented Generation system designed for querying millions of legal documents with high accuracy and low latency.",
             tags: ["RAG", "Vector DB", "React", "Python"],
             link: "https://github.com/cheesychicken",
-            image: "/project_rag.png"
+            image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80&w=800"
         },
         {
             id: 3,
@@ -148,6 +145,30 @@ export const portfolioData = {
             tags: ["AWS", "Spark", "Delta Lake", "Airflow"],
             link: "https://github.com/cheesychicken",
             image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800"
+        },
+        {
+            id: 4,
+            title: "NLP Patent Analysis Tool",
+            description: "Developed automated NLP tools to extract key insights from patent documents, reducing manual research time by 60% for legal teams.",
+            tags: ["NLP", "Python", "spaCy", "Elasticsearch"],
+            link: "https://github.com/cheesychicken",
+            image: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&q=80&w=800"
+        },
+        {
+            id: 5,
+            title: "Real-time ML Pipeline",
+            description: "Built end-to-end ML pipeline for real-time fraud detection, processing 10K+ transactions per second with 99.2% accuracy.",
+            tags: ["MLOps", "Kafka", "Docker", "TensorFlow"],
+            link: "https://github.com/cheesychicken",
+            image: "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&q=80&w=800"
+        },
+        {
+            id: 6,
+            title: "Generative AI Chatbot",
+            description: "Production-ready chatbot leveraging GPT-4 with custom fine-tuning, serving 50K+ daily users with context-aware conversations.",
+            tags: ["GPT-4", "LangChain", "FastAPI", "Redis"],
+            link: "https://github.com/cheesychicken",
+            image: "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&q=80&w=800"
         }
     ],
     experience: [

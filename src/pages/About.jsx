@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { portfolioData } from '../data/portfolio';
+import { Mail } from 'lucide-react';
 import ZoomParallax from '../components/UI/ZoomParallax';
 import AppleScrollSection from '../components/UI/AppleScrollSection';
 import ProjectShowcase from '../components/UI/ProjectShowcase';
@@ -40,13 +41,6 @@ const About = () => {
             <div className="relative z-10 bg-background">
                 <div className="py-16 md:py-24">
                     <div className="text-center mb-20 md:mb-32 px-4 relative">
-                        <motion.img
-                            src="/avatar_coffee_holding.png"
-                            alt="Coffee Time"
-                            className="w-24 h-24 md:w-32 md:h-32 absolute top-0 right-[10%] md:right-[20%] hidden sm:block"
-                            animate={{ y: [0, -10, 0] }}
-                            transition={{ duration: 4, repeat: Infinity }}
-                        />
                         <h2 className="text-4xl md:text-7xl font-bold mb-6 md:mb-8 text-text">The Journey.</h2>
                         <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed px-4">
                             From a single line of code to complex autonomous agents.
@@ -66,15 +60,9 @@ const About = () => {
             </div>
 
             <section className="py-16 md:py-32 bg-black dark:bg-gray-950 text-white overflow-hidden">
-                <div className="container mx-auto px-4 md:px-6 mb-12 md:mb-16 flex items-center justify-center md:justify-start gap-4 md:gap-6">
+                <div className="container mx-auto px-4 md:px-6 mb-12 md:mb-16 text-center md:text-left">
                     <h2 className="text-3xl md:text-5xl lg:text-7xl font-bold">Achievements.</h2>
-                    <motion.img
-                        src="/avatar_nice.png"
-                        alt="Nice"
-                        className="w-16 h-16 md:w-24 md:h-24"
-                        animate={{ rotate: [0, 15, -15, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                    />
+                    <p className="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl">Recognition and impact in AI development</p>
                 </div>
 
                 <div className="flex overflow-x-auto pb-12 px-4 md:px-6 gap-6 md:gap-8 snap-x snap-mandatory hide-scrollbar">
@@ -107,17 +95,24 @@ const About = () => {
 
             <section className="min-h-screen flex items-center justify-center bg-black dark:bg-gray-950 text-white relative overflow-hidden py-20 px-4">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-800 via-black to-black opacity-50" />
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=1920')] bg-cover bg-center opacity-10" />
                 <div className="relative z-10 text-center flex flex-col items-center max-w-4xl mx-auto">
-                    <motion.img
-                        src="/yesno_avatar.png"
-                        alt="Yes or No"
-                        className="w-32 h-32 md:w-40 md:h-40 mb-6 md:mb-8"
-                        animate={{ scale: [1, 1.1, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                    />
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        className="mb-8"
+                    >
+                        <div className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                            <Mail className="w-10 h-10 md:w-12 md:h-12 text-white" />
+                        </div>
+                    </motion.div>
                     <h2 className="text-4xl md:text-6xl lg:text-8xl font-bold mb-8 md:mb-12 tracking-tighter">
                         Let's Create.
                     </h2>
+                    <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl">
+                        Ready to build something amazing? Let's connect and bring your AI ideas to life.
+                    </p>
                     <a
                         href="mailto:ubheshubham.37@gmail.com"
                         className="inline-block px-8 py-4 md:px-12 md:py-5 bg-white text-black dark:bg-primary dark:text-white rounded-full text-lg md:text-xl font-medium hover:scale-105 transition-transform duration-300"

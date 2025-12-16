@@ -154,9 +154,10 @@ const generateTextPoints = (text, count) => {
 };
 
 
-export const CosmicScene = ({ shape, color, expansion, text = "AURA" }) => {
+export const CosmicScene = ({ shape, color, expansion, text = "AURA", cameraPosition, cameraRotation }) => {
     const pointsRef = useRef(null);
     const bgRef = useRef(null);
+    const groupRef = useRef(null);
 
     // Buffers for animation
     const currentPositions = useRef(new Float32Array(PARTICLE_COUNT * 3));
@@ -209,6 +210,20 @@ export const CosmicScene = ({ shape, color, expansion, text = "AURA" }) => {
     }, []);
 
     useFrame((state) => {
+        // Update camera position smoothly
+        if (cameraPosition) {
+            state.camera.position.lerp(
+                new THREE.Vector3(cameraPosition.x, cameraPosition.y, cameraPosition.z),
+                0.1
+            );
+            state.camera.updateProjectionMatrix();
+        }
+
+        // Apply rotation to the particle group
+        if (groupRef.current && cameraRotation !== undefined) {
+            groupRef.current.rotation.y = cameraRotation;
+        }
+
         // Parallax logic: Background follows camera partially to create infinite depth illusion
         if (bgRef.current) {
             bgRef.current.position.copy(state.camera.position).multiplyScalar(0.85);
@@ -275,8 +290,10 @@ export const CosmicScene = ({ shape, color, expansion, text = "AURA" }) => {
 
         pointsRef.current.geometry.attributes.position.needsUpdate = true;
 
-        // Rotate the whole system slowly
-        pointsRef.current.rotation.y += 0.002;
+        // Rotate the whole system slowly when not in gesture mode
+        if (!cameraRotation) {
+            pointsRef.current.rotation.y += 0.002;
+        }
     });
 
     return (
@@ -291,27 +308,34 @@ export const CosmicScene = ({ shape, color, expansion, text = "AURA" }) => {
                 <Sparkles count={200} scale={40} size={5} speed={0.4} opacity={0.2} color="#ffffff" />
             </group>
 
-            <points ref={pointsRef}>
-                <bufferGeometry>
-                    <bufferAttribute
-                        attach="attributes-position"
-                        count={PARTICLE_COUNT}
-                        array={currentPositions.current}
-                        itemSize={3}
+            <group ref={groupRef}>
+                <points ref={pointsRef}>
+                    <bufferGeometry>
+                        <bufferAttribute
+                            attach="attributes-position"
+                            count={PARTICLE_COUNT}
+                            array={currentPositions.current}
+                            itemSize={3}
+                        />
+                    </bufferGeometry>
+                    <pointsMaterial
+                        size={0.15}
+                        color={color}
+                        transparent
+                        opacity={0.8}
+                        sizeAttenuation
+                        blending={THREE.AdditiveBlending}
+                        depthWrite={false}
                     />
-                </bufferGeometry>
-                <pointsMaterial
-                    size={0.15}
-                    color={color}
-                    transparent
-                    opacity={0.8}
-                    sizeAttenuation
-                    blending={THREE.AdditiveBlending}
-                    depthWrite={false}
-                />
-            </points>
+                </points>
+            </group>
 
-            <OrbitControls enableZoom={true} enablePan={true} autoRotate autoRotateSpeed={0.5} />
+            <OrbitControls 
+                enableZoom={true} 
+                enablePan={true} 
+                autoRotate={!cameraRotation} 
+                autoRotateSpeed={0.5} 
+            />
         </>
     );
 };

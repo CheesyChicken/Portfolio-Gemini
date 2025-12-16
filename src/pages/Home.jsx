@@ -31,38 +31,15 @@ const Home = () => {
                     </p>
                 </motion.div>
 
-                <motion.img
-                    src="/avatar_keyboard_surf.png"
-                    alt="Coding Journey"
-                    className="hidden md:block absolute right-[10%] top-[20%] w-64 h-64 drop-shadow-2xl z-10 pointer-events-none"
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{
-                        opacity: 1,
-                        x: 0,
-                        y: [0, -20, 0],
-                        rotate: [0, 5, -5, 0]
-                    }}
-                    transition={{
-                        y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                        rotate: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-                        default: { duration: 1 }
-                    }}
-                />
+
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
 
                     <motion.div
                         whileHover={{ scale: 1.02 }}
-                        className="md:col-span-2 glass-panel p-6 md:p-8 relative overflow-hidden"
+                        className="md:col-span-2 glass-panel p-6 md:p-8 relative overflow-hidden border-l-4 border-primary"
                     >
-                        <motion.img
-                            src="/avatar_thumbsup.png"
-                            alt="Thumbs Up"
-                            className="absolute top-2 right-2 md:top-4 md:right-4 w-16 h-16 md:w-20 md:h-20 opacity-80"
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: 0.5, type: "spring" }}
-                        />
+                        <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl" />
                         <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-text">AI Agent Architect</h3>
                         <p className="text-text-secondary mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
                             I build intelligent systems with LLMs and GenAI.
