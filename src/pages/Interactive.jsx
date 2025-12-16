@@ -115,15 +115,14 @@ const Interactive = () => {
         return () => clearInterval(interval);
     }, [gestureMode, lastGestureTime, handPresent, shape]);
 
-    // Mouse/trackpad gesture handlers
+    // Mouse/trackpad gesture handlers (always active)
     const handleMouseDown = useCallback((e) => {
-        if (!gestureMode) return;
         setIsMouseDown(true);
         setLastMousePos({ x: e.clientX, y: e.clientY });
-    }, [gestureMode]);
+    }, []);
 
     const handleMouseMove = useCallback((e) => {
-        if (!gestureMode || !isMouseDown) return;
+        if (!isMouseDown) return;
         
         const deltaX = e.clientX - lastMousePos.x;
         const deltaY = e.clientY - lastMousePos.y;
@@ -141,14 +140,13 @@ const Interactive = () => {
         }
 
         setLastMousePos({ x: e.clientX, y: e.clientY });
-    }, [gestureMode, isMouseDown, lastMousePos]);
+    }, [isMouseDown, lastMousePos]);
 
     const handleMouseUp = useCallback(() => {
         setIsMouseDown(false);
     }, []);
 
     const handleWheel = useCallback((e) => {
-        if (!gestureMode) return;
         e.preventDefault();
         
         // Zoom with scroll wheel
@@ -161,17 +159,16 @@ const Interactive = () => {
         if (e.ctrlKey || e.metaKey) {
             setExpansion(prev => Math.max(0, Math.min(1, prev - e.deltaY * 0.001)));
         }
-    }, [gestureMode]);
+    }, []);
 
-    // Trackpad pinch gesture (for Safari/macOS)
+    // Trackpad pinch gesture (for Safari/macOS, always active)
     const handleGestureStart = useCallback((e) => {
-        if (!gestureMode) return;
         e.preventDefault();
         setIsPinching(true);
-    }, [gestureMode]);
+    }, []);
 
     const handleGestureChange = useCallback((e) => {
-        if (!gestureMode || !isPinching) return;
+        if (!isPinching) return;
         e.preventDefault();
         
         // Zoom with pinch
@@ -180,13 +177,13 @@ const Interactive = () => {
             ...prev,
             z: Math.max(10, Math.min(50, prev.z / scale))
         }));
-    }, [gestureMode, isPinching]);
+    }, [isPinching]);
 
     const handleGestureEnd = useCallback(() => {
         setIsPinching(false);
     }, []);
 
-    // Attach mouse/trackpad listeners
+    // Attach mouse/trackpad listeners (always active)
     useEffect(() => {
         const canvas = document.querySelector('canvas');
         if (!canvas) return;
@@ -210,7 +207,7 @@ const Interactive = () => {
             canvas.removeEventListener('gesturechange', handleGestureChange);
             canvas.removeEventListener('gestureend', handleGestureEnd);
         };
-    }, [gestureMode, handleMouseDown, handleMouseMove, handleMouseUp, handleWheel, handleGestureStart, handleGestureChange, handleGestureEnd]);
+    }, [handleMouseDown, handleMouseMove, handleMouseUp, handleWheel, handleGestureStart, handleGestureChange, handleGestureEnd]);
 
     return (
         <div className="w-full h-screen bg-black relative font-sans overflow-hidden">
