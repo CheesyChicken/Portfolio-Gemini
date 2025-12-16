@@ -154,7 +154,7 @@ const generateTextPoints = (text, count) => {
 };
 
 
-export const CosmicScene = ({ shape, color, expansion, text = "AURA", cameraPosition, cameraRotation }) => {
+export const CosmicScene = ({ shape, color, expansion, text = "AURA", cameraPosition, cameraRotation, gestureMode }) => {
     const pointsRef = useRef(null);
     const bgRef = useRef(null);
     const groupRef = useRef(null);
@@ -330,12 +330,14 @@ export const CosmicScene = ({ shape, color, expansion, text = "AURA", cameraPosi
                 </points>
             </group>
 
-            <OrbitControls 
-                enableZoom={true} 
-                enablePan={true} 
-                autoRotate={!cameraRotation} 
-                autoRotateSpeed={0.5} 
-            />
+            {!gestureMode && (
+                <OrbitControls 
+                    enableZoom={true} 
+                    enablePan={true} 
+                    autoRotate={true} 
+                    autoRotateSpeed={0.5} 
+                />
+            )}
         </>
     );
 };

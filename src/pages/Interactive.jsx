@@ -88,6 +88,14 @@ const Interactive = () => {
         }
     }, [handPresent, shapes]);
 
+    // Reset camera position when gesture mode is toggled off
+    useEffect(() => {
+        if (!gestureMode) {
+            setCameraPosition({ x: 0, y: 0, z: 30 });
+            setCameraRotation(0);
+        }
+    }, [gestureMode]);
+
     // Reset expansion to default if no gesture for a while
     useEffect(() => {
         const interval = setInterval(() => {
@@ -107,7 +115,7 @@ const Interactive = () => {
 
             {/* 3D Viewport */}
             <div className="absolute inset-0 z-0">
-                <Canvas camera={{ position: [cameraPosition.x, cameraPosition.y, cameraPosition.z], fov: 45 }}>
+                <Canvas camera={{ position: [0, 0, 30], fov: 45 }}>
                     <CosmicScene 
                         shape={shape} 
                         color={color} 
@@ -115,6 +123,7 @@ const Interactive = () => {
                         text={text}
                         cameraPosition={cameraPosition}
                         cameraRotation={cameraRotation}
+                        gestureMode={gestureMode}
                     />
                 </Canvas>
             </div>

@@ -100,6 +100,12 @@ const GestureController = ({ onGesture, isActive }) => {
                     // Map distance to expansion (0 to 1)
                     const expansion = Math.min(Math.max((pinchDistance - 20) / 130, 0), 1);
 
+                    // Initialize previous position on first detection
+                    if (prevHandPos.current.x === 0 && prevHandPos.current.y === 0) {
+                        prevHandPos.current = { x: palmCenterX, y: palmCenterY };
+                        prevPinchDistance.current = pinchDistance;
+                    }
+
                     // Calculate hand movement delta
                     const deltaX = palmCenterX - prevHandPos.current.x;
                     const deltaY = palmCenterY - prevHandPos.current.y;
@@ -109,10 +115,10 @@ const GestureController = ({ onGesture, isActive }) => {
                         ? (pinchDistance - prevPinchDistance.current) / 50 
                         : 0;
 
-                    // Calculate rotation based on horizontal hand movement
-                    const rotationDelta = deltaX * 0.01;
+                    // Calculate rotation based on horizontal hand movement (swipe)
+                    const rotationDelta = Math.abs(deltaX) > 2 ? deltaX * 0.01 : 0;
 
-                    onGesture({
+                    const gestureData = {
                         expansion: expansion,
                         hasHand: true,
                         detected: true,
@@ -121,7 +127,20 @@ const GestureController = ({ onGesture, isActive }) => {
                         zoom: zoomDelta,
                         rotation: rotationDelta,
                         pinchDistance: pinchDistance
-                    });
+                    };
+
+                    // Debug log every 30 frames
+                    if (Math.random() < 0.03) {
+                        console.log('Gesture:', {
+                            expansion: expansion.toFixed(2),
+                            zoom: zoomDelta.toFixed(3),
+                            rotation: rotationDelta.toFixed(3),
+                            deltaX: deltaX.toFixed(1),
+                            deltaY: deltaY.toFixed(1)
+                        });
+                    }
+
+                    onGesture(gestureData);
 
                     // Update previous positions
                     prevHandPos.current = { x: palmCenterX, y: palmCenterY };
