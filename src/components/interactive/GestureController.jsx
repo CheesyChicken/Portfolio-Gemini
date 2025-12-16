@@ -68,10 +68,10 @@ const GestureController = ({ onGesture, isActive }) => {
 
     // Detection Loop
     const detectHands = async () => {
+        if (!isActive) return;
+        
         // Always schedule next frame if active
-        if (isActive) {
-            requestRef.current = requestAnimationFrame(detectHands);
-        }
+        requestRef.current = requestAnimationFrame(detectHands);
 
         if (videoRef.current && model && videoRef.current.readyState === 4) {
             try {
@@ -129,16 +129,15 @@ const GestureController = ({ onGesture, isActive }) => {
                         pinchDistance: pinchDistance
                     };
 
-                    // Debug log every 30 frames
-                    if (Math.random() < 0.03) {
-                        console.log('Gesture:', {
-                            expansion: expansion.toFixed(2),
-                            zoom: zoomDelta.toFixed(3),
-                            rotation: rotationDelta.toFixed(3),
-                            deltaX: deltaX.toFixed(1),
-                            deltaY: deltaY.toFixed(1)
-                        });
-                    }
+                      // Debug log every 60 frames (roughly 1 per second)
+                      if (Math.random() < 0.016) {
+                          console.log('✋ Gesture Data:', {
+                              expansion: expansion.toFixed(2),
+                              zoom: zoomDelta.toFixed(3),
+                              rotation: rotationDelta.toFixed(3),
+                              pan: `(${deltaX.toFixed(1)}, ${deltaY.toFixed(1)})`
+                          });
+                      }
 
                     onGesture(gestureData);
 

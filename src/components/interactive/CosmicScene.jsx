@@ -209,18 +209,18 @@ export const CosmicScene = ({ shape, color, expansion, text = "AURA", cameraPosi
         }
     }, []);
 
-    useFrame((state) => {
-        // Update camera position smoothly
-        if (cameraPosition) {
+    useFrame((state, delta) => {
+        // Update camera position smoothly when gesture mode is active
+        if (cameraPosition && gestureMode) {
             state.camera.position.lerp(
                 new THREE.Vector3(cameraPosition.x, cameraPosition.y, cameraPosition.z),
-                0.1
+                0.15
             );
-            state.camera.updateProjectionMatrix();
+            state.camera.lookAt(0, 0, 0);
         }
 
         // Apply rotation to the particle group
-        if (groupRef.current && cameraRotation !== undefined) {
+        if (groupRef.current && cameraRotation !== undefined && gestureMode) {
             groupRef.current.rotation.y = cameraRotation;
         }
 
