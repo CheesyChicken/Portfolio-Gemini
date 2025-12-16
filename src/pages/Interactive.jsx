@@ -138,6 +138,11 @@ const Interactive = () => {
         if (Math.abs(deltaX) > 5) {
             setCameraRotation(prev => prev + deltaX * 0.01);
         }
+        
+        // Shift key for expansion control
+        if (e.shiftKey) {
+            setExpansion(prev => Math.max(0, Math.min(1, prev + deltaY * 0.005)));
+        }
 
         setLastMousePos({ x: e.clientX, y: e.clientY });
     }, [isMouseDown, lastMousePos]);
@@ -183,10 +188,13 @@ const Interactive = () => {
         setIsPinching(false);
     }, []);
 
-    // Attach mouse/trackpad listeners (always active)
+      // Attach mouse/trackpad listeners (always active)
     useEffect(() => {
         const canvas = document.querySelector('canvas');
         if (!canvas) return;
+        
+        // Change cursor style
+        canvas.style.cursor = isMouseDown ? 'grabbing' : 'grab';
 
         canvas.addEventListener('mousedown', handleMouseDown);
         window.addEventListener('mousemove', handleMouseMove);
@@ -207,7 +215,7 @@ const Interactive = () => {
             canvas.removeEventListener('gesturechange', handleGestureChange);
             canvas.removeEventListener('gestureend', handleGestureEnd);
         };
-    }, [handleMouseDown, handleMouseMove, handleMouseUp, handleWheel, handleGestureStart, handleGestureChange, handleGestureEnd]);
+    }, [isMouseDown, isPinching, handleMouseDown, handleMouseMove, handleMouseUp, handleWheel, handleGestureStart, handleGestureChange, handleGestureEnd]);
 
     return (
         <div className="w-full h-screen bg-black relative font-sans overflow-hidden">
@@ -233,12 +241,17 @@ const Interactive = () => {
 
                   {/* Top Bar */}
                   <header className="flex justify-between items-start pointer-events-none">
-                      <div>
-                          <h1 className="text-3xl font-bold text-white drop-shadow-lg tracking-tighter">
-                              AURA <span className="text-indigo-400">PARTICLES</span>
-                          </h1>
-                          <p className="text-gray-400 text-xs mt-1">Interactive Generative System</p>
-                      </div>
+                        <div>
+                            <h1 className="text-3xl font-bold text-white drop-shadow-lg tracking-tighter">
+                                AURA <span className="text-indigo-400">PARTICLES</span>
+                            </h1>
+                            <p className="text-gray-400 text-xs mt-1">Interactive Generative System</p>
+                            <div className="text-[10px] text-gray-500 mt-2 space-y-0.5">
+                                <div>🖱️ Drag: Pan • Scroll: Zoom</div>
+                                <div>⇧ Shift+Drag: Expansion</div>
+                                <div>⌘ Ctrl+Scroll: Expansion</div>
+                            </div>
+                        </div>
                   </header>
 
                 {/* Main Controls Overlay */}
