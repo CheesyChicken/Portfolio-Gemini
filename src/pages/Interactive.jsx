@@ -132,8 +132,8 @@ const Interactive = () => {
                 <div className="absolute inset-0 z-10 flex flex-col justify-between p-6">
 
 
-                {/* Top Bar */}
-                <header className="flex justify-between items-start pointer-events-auto">
+                  {/* Top Bar */}
+                  <header className="flex justify-between items-start pointer-events-auto z-20">
                     <div>
                         <h1 className="text-3xl font-bold text-white drop-shadow-lg tracking-tighter">
                             AURA <span className="text-indigo-400">PARTICLES</span>
