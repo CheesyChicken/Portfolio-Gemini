@@ -194,11 +194,12 @@ const GestureController = ({ onGesture, isActive }) => {
                 <div className="mt-2 text-[10px] font-mono uppercase text-green-400">
                     {status}
                 </div>
-                <div className="text-[9px] text-gray-500 mt-1 text-center w-full leading-tight">
-                    Pinch: Zoom In/Out<br />
-                    Move: Pan Camera<br />
-                    Swipe: Rotate 360°
-                </div>
+                  <div className="text-[9px] text-gray-500 mt-1 text-center w-full leading-tight">
+                      👆 Pinch: Zoom In/Out<br />
+                      ✋ Move: Pan Camera<br />
+                      👉 Swipe: Rotate 360°<br />
+                      <span className="text-blue-400 mt-1 block">🖱️ Mouse/Trackpad Supported</span>
+                  </div>
             </div>
         </div>
     );

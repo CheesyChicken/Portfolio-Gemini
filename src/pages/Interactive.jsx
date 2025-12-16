@@ -19,6 +19,11 @@ const Interactive = () => {
     // New states for camera control
     const [cameraPosition, setCameraPosition] = useState({ x: 0, y: 0, z: 30 });
     const [cameraRotation, setCameraRotation] = useState(0);
+    
+    // Mouse/trackpad gesture states
+    const [isMouseDown, setIsMouseDown] = useState(false);
+    const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 });
+    const [isPinching, setIsPinching] = useState(false);
 
     const shapes = [
         { type: ParticleShapeType.HEART, icon: Heart, label: 'Heart' },
@@ -109,6 +114,103 @@ const Interactive = () => {
         }, 100);
         return () => clearInterval(interval);
     }, [gestureMode, lastGestureTime, handPresent, shape]);
+
+    // Mouse/trackpad gesture handlers
+    const handleMouseDown = useCallback((e) => {
+        if (!gestureMode) return;
+        setIsMouseDown(true);
+        setLastMousePos({ x: e.clientX, y: e.clientY });
+    }, [gestureMode]);
+
+    const handleMouseMove = useCallback((e) => {
+        if (!gestureMode || !isMouseDown) return;
+        
+        const deltaX = e.clientX - lastMousePos.x;
+        const deltaY = e.clientY - lastMousePos.y;
+
+        // Pan camera
+        setCameraPosition(prev => ({
+            x: prev.x + deltaX * 0.05,
+            y: prev.y - deltaY * 0.05,
+            z: prev.z
+        }));
+
+        // Horizontal swipe for rotation
+        if (Math.abs(deltaX) > 5) {
+            setCameraRotation(prev => prev + deltaX * 0.01);
+        }
+
+        setLastMousePos({ x: e.clientX, y: e.clientY });
+    }, [gestureMode, isMouseDown, lastMousePos]);
+
+    const handleMouseUp = useCallback(() => {
+        setIsMouseDown(false);
+    }, []);
+
+    const handleWheel = useCallback((e) => {
+        if (!gestureMode) return;
+        e.preventDefault();
+        
+        // Zoom with scroll wheel
+        setCameraPosition(prev => ({
+            ...prev,
+            z: Math.max(10, Math.min(50, prev.z + e.deltaY * 0.05))
+        }));
+
+        // Ctrl/Cmd + scroll for expansion control
+        if (e.ctrlKey || e.metaKey) {
+            setExpansion(prev => Math.max(0, Math.min(1, prev - e.deltaY * 0.001)));
+        }
+    }, [gestureMode]);
+
+    // Trackpad pinch gesture (for Safari/macOS)
+    const handleGestureStart = useCallback((e) => {
+        if (!gestureMode) return;
+        e.preventDefault();
+        setIsPinching(true);
+    }, [gestureMode]);
+
+    const handleGestureChange = useCallback((e) => {
+        if (!gestureMode || !isPinching) return;
+        e.preventDefault();
+        
+        // Zoom with pinch
+        const scale = e.scale;
+        setCameraPosition(prev => ({
+            ...prev,
+            z: Math.max(10, Math.min(50, prev.z / scale))
+        }));
+    }, [gestureMode, isPinching]);
+
+    const handleGestureEnd = useCallback(() => {
+        setIsPinching(false);
+    }, []);
+
+    // Attach mouse/trackpad listeners
+    useEffect(() => {
+        const canvas = document.querySelector('canvas');
+        if (!canvas) return;
+
+        canvas.addEventListener('mousedown', handleMouseDown);
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+        canvas.addEventListener('wheel', handleWheel, { passive: false });
+        
+        // Safari trackpad gestures
+        canvas.addEventListener('gesturestart', handleGestureStart);
+        canvas.addEventListener('gesturechange', handleGestureChange);
+        canvas.addEventListener('gestureend', handleGestureEnd);
+
+        return () => {
+            canvas.removeEventListener('mousedown', handleMouseDown);
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseup', handleMouseUp);
+            canvas.removeEventListener('wheel', handleWheel);
+            canvas.removeEventListener('gesturestart', handleGestureStart);
+            canvas.removeEventListener('gesturechange', handleGestureChange);
+            canvas.removeEventListener('gestureend', handleGestureEnd);
+        };
+    }, [gestureMode, handleMouseDown, handleMouseMove, handleMouseUp, handleWheel, handleGestureStart, handleGestureChange, handleGestureEnd]);
 
     return (
         <div className="w-full h-screen bg-black relative font-sans overflow-hidden">
