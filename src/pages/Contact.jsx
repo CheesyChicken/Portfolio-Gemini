@@ -14,20 +14,45 @@ const Contact = () => {
     const [messageStatus, setMessageStatus] = useState(null);
     const [formData, setFormData] = useState({ name: '', email: '', message: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [lastBooking, setLastBooking] = useState(null);
+
+    const calendlyUrl = import.meta.env.VITE_CALENDLY_URL || 'https://calendly.com/ubheshubham/30min';
 
     const availableSlots = bookingService.getAvailableSlots(selectedDate);
+
+    const buildGoogleCalendarLink = (booking) => {
+        if (!booking) return null;
+
+        const [hour, minute] = booking.time.split(':').map(Number);
+        const start = new Date(booking.date);
+        start.setHours(hour, minute, 0, 0);
+        const end = new Date(start.getTime() + 30 * 60 * 1000);
+
+        const format = (dateObj) => dateObj.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+        const text = encodeURIComponent('Meeting with Shubham');
+        const details = encodeURIComponent(`Booked via portfolio site\nName: ${booking.name}\nEmail: ${booking.email}`);
+        const dates = `${format(start)}/${format(end)}`;
+        const location = encodeURIComponent('Google Meet (share link by email)');
+
+        return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${dates}&details=${details}&location=${location}`;
+    };
 
     const handleBooking = async (e) => {
         e.preventDefault();
         if (!selectedSlot || !formData.name || !formData.email || isSubmitting) return;
 
         setIsSubmitting(true);
-        const result = bookingService.bookSlot(selectedDate, selectedSlot, {
+        const bookingDetails = {
             ...formData,
+            date: selectedDate.toISOString(),
+            time: selectedSlot,
             type: 'meeting'
-        });
+        };
+
+        const result = bookingService.bookSlot(selectedDate, selectedSlot, bookingDetails);
 
         if (result.status === 'success') {
+            setLastBooking(bookingDetails);
             await emailService.sendBookingConfirmation({
                 ...formData,
                 date: selectedDate.toISOString().split('T')[0],
@@ -36,6 +61,9 @@ const Contact = () => {
         }
 
         setBookingStatus(result);
+        if (result.status !== 'success') {
+            setLastBooking(null);
+        }
         setIsSubmitting(false);
         
         if (result.status === 'success') {
@@ -92,18 +120,23 @@ const Contact = () => {
                 </motion.div>
 
                 <div className="flex justify-center gap-3 md:gap-4 mb-8 md:mb-12 flex-wrap px-4">
-                    {['message', 'booking', 'coffee'].map((tab) => (
-                        <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab)}
-                            className={`px-4 md:px-6 py-2 rounded-full capitalize transition-all text-sm md:text-base ${activeTab === tab
-                                ? 'bg-primary text-white shadow-lg scale-105'
-                                : 'bg-white dark:bg-surface text-text-secondary hover:bg-gray-100 dark:hover:bg-surface/80'
-                                }`}
-                        >
-                            {tab === 'coffee' ? 'Buy me a Coffee' : tab}
-                        </button>
-                    ))}
+                              {['message', 'booking', 'coffee'].map((tab) => (
+                                  <button
+                                      key={tab}
+                                      onClick={() => setActiveTab(tab)}
+                                      className={`px-4 md:px-6 py-2 rounded-full capitalize transition-all text-sm md:text-base ${activeTab === tab
+                                          ? 'bg-primary text-white shadow-lg scale-105'
+                                          : 'bg-white dark:bg-surface text-text-secondary hover:bg-gray-100 dark:hover:bg-surface/80'
+                                          }`}
+                                  >
+                                      {tab === 'coffee'
+                                          ? 'Buy Me a Coffee'
+                                          : tab === 'message'
+                                              ? 'Message'
+                                              : 'Booking'}
+                                  </button>
+                              ))}
+
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-5xl mx-auto">
@@ -192,21 +225,49 @@ const Contact = () => {
                                     <Calendar className="text-primary" /> Book a Slot
                                 </h3>
 
-                                {bookingStatus?.status === 'success' ? (
-                                    <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 p-6 rounded-xl flex flex-col items-center gap-4 text-center">
-                                        <motion.img
-                                            src="/avatar_k.png"
-                                            alt="OK"
-                                            className="w-32 h-32"
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            transition={{ type: "spring" }}
-                                        />
-                                        <div className="flex items-center gap-2 font-bold text-xl">
-                                            <CheckCircle /> {bookingStatus.message}
-                                        </div>
-                                    </div>
-                                ) : bookingStatus?.status === 'error' ? (
+                                  {bookingStatus?.status === 'success' ? (
+                                      <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 p-6 rounded-xl flex flex-col items-center gap-4 text-center">
+                                          <motion.img
+                                              src="/avatar_k.png"
+                                              alt="OK"
+                                              className="w-32 h-32"
+                                              initial={{ scale: 0 }}
+                                              animate={{ scale: 1 }}
+                                              transition={{ type: "spring" }}
+                                          />
+                                          <div className="flex items-center gap-2 font-bold text-xl">
+                                              <CheckCircle /> {bookingStatus.message}
+                                          </div>
+                                          {lastBooking && (
+                                              <div className="w-full flex flex-col gap-3">
+                                                  <p className="text-sm text-text-secondary text-center">
+                                                      Reserved for {new Date(lastBooking.date).toLocaleDateString()} at {lastBooking.time}
+                                                  </p>
+                                                  <div className="flex flex-wrap justify-center gap-3">
+                                                      {buildGoogleCalendarLink(lastBooking) && (
+                                                          <a
+                                                              href={buildGoogleCalendarLink(lastBooking)}
+                                                              target="_blank"
+                                                              rel="noopener noreferrer"
+                                                              className="btn-primary px-4 py-2 text-sm"
+                                                          >
+                                                              Add to Google Calendar
+                                                          </a>
+                                                      )}
+                                                      <a
+                                                          href={calendlyUrl}
+                                                          target="_blank"
+                                                          rel="noopener noreferrer"
+                                                          className="px-4 py-2 rounded-xl border border-primary/40 text-primary bg-primary/10 hover:bg-primary/20 transition-colors text-sm"
+                                                      >
+                                                          Open Calendly
+                                                      </a>
+                                                  </div>
+                                              </div>
+                                          )}
+                                      </div>
+                                  ) : bookingStatus?.status === 'error' ? (
+
                                     <div className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 p-6 rounded-xl flex flex-col items-center gap-4 text-center">
                                         <motion.img
                                             src="/avatar_oops.png"
