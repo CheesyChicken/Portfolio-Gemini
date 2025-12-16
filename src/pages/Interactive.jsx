@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { CosmicScene } from '../components/interactive/CosmicScene';
 import GestureController from '../components/interactive/GestureController';
@@ -15,15 +15,55 @@ const Interactive = () => {
     const [handPresent, setHandPresent] = useState(false);
     const [text, setText] = useState("AURA");
     const [inputText, setInputText] = useState("");
-    
+
     // New states for camera control
     const [cameraPosition, setCameraPosition] = useState({ x: 0, y: 0, z: 30 });
     const [cameraRotation, setCameraRotation] = useState(0);
-    
+
     // Mouse/trackpad gesture states
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 });
     const [isPinching, setIsPinching] = useState(false);
+
+    // Track physical modifier keys so we can distinguish:
+    // - Trackpad pinch (often reports ctrlKey=true without Control being held)
+    // - Actual Ctrl/Cmd + scroll (intentional modifier)
+    const ctrlPressedRef = useRef(false);
+    const metaPressedRef = useRef(false);
+
+    const cameraPositionRef = useRef(cameraPosition);
+    const gestureStartZRef = useRef(null);
+
+    useEffect(() => {
+        cameraPositionRef.current = cameraPosition;
+    }, [cameraPosition]);
+
+    useEffect(() => {
+        const onKeyDown = (e) => {
+            if (e.key === 'Control') ctrlPressedRef.current = true;
+            if (e.key === 'Meta') metaPressedRef.current = true;
+        };
+
+        const onKeyUp = (e) => {
+            if (e.key === 'Control') ctrlPressedRef.current = false;
+            if (e.key === 'Meta') metaPressedRef.current = false;
+        };
+
+        const onBlur = () => {
+            ctrlPressedRef.current = false;
+            metaPressedRef.current = false;
+        };
+
+        window.addEventListener('keydown', onKeyDown);
+        window.addEventListener('keyup', onKeyUp);
+        window.addEventListener('blur', onBlur);
+
+        return () => {
+            window.removeEventListener('keydown', onKeyDown);
+            window.removeEventListener('keyup', onKeyUp);
+            window.removeEventListener('blur', onBlur);
+        };
+    }, []);
 
     const shapes = [
         { type: ParticleShapeType.HEART, icon: Heart, label: 'Heart' },
@@ -123,7 +163,7 @@ const Interactive = () => {
 
     const handleMouseMove = useCallback((e) => {
         if (!isMouseDown) return;
-        
+
         const deltaX = e.clientX - lastMousePos.x;
         const deltaY = e.clientY - lastMousePos.y;
 
@@ -138,7 +178,7 @@ const Interactive = () => {
         if (Math.abs(deltaX) > 5) {
             setCameraRotation(prev => prev + deltaX * 0.01);
         }
-        
+
         // Shift key for expansion control
         if (e.shiftKey) {
             setExpansion(prev => Math.max(0, Math.min(1, prev + deltaY * 0.005)));
@@ -153,51 +193,62 @@ const Interactive = () => {
 
     const handleWheel = useCallback((e) => {
         e.preventDefault();
-        
-        // Zoom with scroll wheel
+
+        const ctrlPressed = ctrlPressedRef.current;
+        const metaPressed = metaPressedRef.current;
+
+        // Intentional modifier scroll (physical Ctrl/Cmd held down)
+        // Note: trackpad pinch-to-zoom may report ctrlKey=true without Control being held.
+        const isExpansionModifier = (e.metaKey && metaPressed) || (e.ctrlKey && ctrlPressed);
+
+        if (isExpansionModifier) {
+            // Ctrl/Cmd + scroll => expansion only
+            setExpansion(prev => Math.max(0, Math.min(1, prev - e.deltaY * 0.001)));
+            return;
+        }
+
+        // Scroll OR trackpad pinch => zoom
         setCameraPosition(prev => ({
             ...prev,
             z: Math.max(10, Math.min(50, prev.z + e.deltaY * 0.05))
         }));
-
-        // Ctrl/Cmd + scroll for expansion control
-        if (e.ctrlKey || e.metaKey) {
-            setExpansion(prev => Math.max(0, Math.min(1, prev - e.deltaY * 0.001)));
-        }
     }, []);
 
-    // Trackpad pinch gesture (for Safari/macOS, always active)
+    // Trackpad pinch gesture (Safari/macOS)
     const handleGestureStart = useCallback((e) => {
         e.preventDefault();
         setIsPinching(true);
+        gestureStartZRef.current = cameraPositionRef.current.z;
     }, []);
 
     const handleGestureChange = useCallback((e) => {
         if (!isPinching) return;
         e.preventDefault();
-        
-        // Zoom with pinch
-        const scale = e.scale;
+
+        const startZ = gestureStartZRef.current ?? 30;
+        const scale = e.scale || 1;
+
         setCameraPosition(prev => ({
             ...prev,
-            z: Math.max(10, Math.min(50, prev.z / scale))
+            z: Math.max(10, Math.min(50, startZ / scale))
         }));
     }, [isPinching]);
 
     const handleGestureEnd = useCallback(() => {
         setIsPinching(false);
+        gestureStartZRef.current = null;
     }, []);
 
-      // Attach mouse/trackpad listeners (always active)
+    // Attach mouse/trackpad listeners (always active)
     useEffect(() => {
         const canvas = document.querySelector('canvas');
         if (!canvas) return;
-        
+
         canvas.addEventListener('mousedown', handleMouseDown);
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseup', handleMouseUp);
         canvas.addEventListener('wheel', handleWheel, { passive: false });
-        
+
         // Safari trackpad gestures
         canvas.addEventListener('gesturestart', handleGestureStart);
         canvas.addEventListener('gesturechange', handleGestureChange);
@@ -213,7 +264,7 @@ const Interactive = () => {
             canvas.removeEventListener('gestureend', handleGestureEnd);
         };
     }, [handleMouseDown, handleMouseMove, handleMouseUp, handleWheel, handleGestureStart, handleGestureChange, handleGestureEnd]);
-    
+
     // Update cursor separately
     useEffect(() => {
         const canvas = document.querySelector('canvas');
@@ -251,7 +302,7 @@ const Interactive = () => {
                             </h1>
                             <p className="text-gray-400 text-xs mt-1">Interactive Generative System</p>
                             <div className="text-[10px] text-gray-500 mt-2 space-y-0.5">
-                                <div>🖱️ Drag: Pan • Scroll: Zoom</div>
+                                <div>🖱️ Drag: Pan • Scroll/Pinch: Zoom</div>
                                 <div>⇧ Shift+Drag: Expansion</div>
                                 <div>⌘ Ctrl+Scroll: Expansion</div>
                             </div>
