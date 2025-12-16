@@ -12,7 +12,6 @@ import Contact from './pages/Contact';
 import Interactive from './pages/Interactive';
 import Life from './pages/Life';
 import CustomCursor from './components/UI/CustomCursor';
-import GestureController from './components/AI/GestureController';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -41,14 +40,13 @@ function App() {
 
           <Navbar />
 
-          <main className="relative z-10">
-            <Suspense fallback={null}>
-              <AnimatedRoutes />
-            </Suspense>
-          </main>
+            <main className="relative z-10">
+              <Suspense fallback={null}>
+                <AnimatedRoutes />
+              </Suspense>
+            </main>
 
-          <GestureController />
-          <Dock />
+            <Dock />
         </div>
       </Router>
     </ThemeProvider>
