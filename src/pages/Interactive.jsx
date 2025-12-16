@@ -133,25 +133,14 @@ const Interactive = () => {
 
 
                   {/* Top Bar */}
-                  <header className="flex justify-between items-start pointer-events-auto z-20">
-                    <div>
-                        <h1 className="text-3xl font-bold text-white drop-shadow-lg tracking-tighter">
-                            AURA <span className="text-indigo-400">PARTICLES</span>
-                        </h1>
-                        <p className="text-gray-400 text-xs mt-1">Interactive Generative System</p>
-                    </div>
-
-                    <button
-                        onClick={() => setGestureMode(!gestureMode)}
-                        className={`px-4 py-2 rounded-lg font-medium text-sm transition-all border flex items-center gap-2 backdrop-blur-md ${gestureMode
-                            ? 'bg-red-500/20 border-red-500 text-red-200 shadow-[0_0_15px_rgba(239,68,68,0.3)]'
-                            : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
-                            }`}
-                    >
-                        {gestureMode ? <VideoOff size={16} /> : <Video size={16} />}
-                        {gestureMode ? 'Stop Camera' : 'Enable Gesture Control'}
-                    </button>
-                </header>
+                  <header className="flex justify-between items-start pointer-events-none">
+                      <div>
+                          <h1 className="text-3xl font-bold text-white drop-shadow-lg tracking-tighter">
+                              AURA <span className="text-indigo-400">PARTICLES</span>
+                          </h1>
+                          <p className="text-gray-400 text-xs mt-1">Interactive Generative System</p>
+                      </div>
+                  </header>
 
                 {/* Main Controls Overlay */}
                 <div className="flex-1 flex items-center justify-between pointer-events-none mt-8">
@@ -179,11 +168,23 @@ const Interactive = () => {
                         </div>
                     </div>
 
-                    {/* Right Sidebar Group */}
-                    <div className="flex flex-col gap-4 pointer-events-auto">
+                      {/* Right Sidebar Group */}
+                      <div className="flex flex-col gap-4 pointer-events-auto">
 
-                        {/* Search Bar (Morph to Text) */}
-                        <div className="bg-black/40 backdrop-blur-xl border border-white/10 p-2 rounded-2xl flex items-center gap-2 shadow-2xl">
+                          {/* Gesture Toggle */}
+                          <button
+                              onClick={() => setGestureMode(!gestureMode)}
+                              className={`p-3 rounded-2xl font-medium text-sm transition-all border flex items-center justify-center gap-2 backdrop-blur-xl shadow-2xl ${gestureMode
+                                  ? 'bg-red-500/20 border-red-500 text-red-200 shadow-[0_0_15px_rgba(239,68,68,0.3)]'
+                                  : 'bg-black/40 border-white/10 text-white hover:bg-white/20'
+                                  }`}
+                          >
+                              {gestureMode ? <VideoOff size={18} /> : <Video size={18} />}
+                              <span className="text-xs">{gestureMode ? 'OFF' : 'ON'}</span>
+                          </button>
+
+                          {/* Search Bar (Morph to Text) */}
+                          <div className="bg-black/40 backdrop-blur-xl border border-white/10 p-2 rounded-2xl flex items-center gap-2 shadow-2xl">
                             <input
                                 type="text"
                                 value={inputText}
