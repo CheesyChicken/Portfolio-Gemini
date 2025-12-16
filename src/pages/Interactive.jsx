@@ -193,9 +193,6 @@ const Interactive = () => {
         const canvas = document.querySelector('canvas');
         if (!canvas) return;
         
-        // Change cursor style
-        canvas.style.cursor = isMouseDown ? 'grabbing' : 'grab';
-
         canvas.addEventListener('mousedown', handleMouseDown);
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseup', handleMouseUp);
@@ -215,7 +212,14 @@ const Interactive = () => {
             canvas.removeEventListener('gesturechange', handleGestureChange);
             canvas.removeEventListener('gestureend', handleGestureEnd);
         };
-    }, [isMouseDown, isPinching, handleMouseDown, handleMouseMove, handleMouseUp, handleWheel, handleGestureStart, handleGestureChange, handleGestureEnd]);
+    }, [handleMouseDown, handleMouseMove, handleMouseUp, handleWheel, handleGestureStart, handleGestureChange, handleGestureEnd]);
+    
+    // Update cursor separately
+    useEffect(() => {
+        const canvas = document.querySelector('canvas');
+        if (!canvas) return;
+        canvas.style.cursor = isMouseDown ? 'grabbing' : 'grab';
+    }, [isMouseDown]);
 
     return (
         <div className="w-full h-screen bg-black relative font-sans overflow-hidden">
