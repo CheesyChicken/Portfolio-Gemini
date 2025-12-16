@@ -37,18 +37,18 @@ const About = () => {
                 </div>
             </ZoomParallax>
 
-            <div className="relative z-10 bg-background -mt-[100vh] pt-[100vh]">
-                <div className="py-24">
-                    <div className="text-center mb-32 px-4 relative">
+            <div className="relative z-10 bg-background">
+                <div className="py-16 md:py-24">
+                    <div className="text-center mb-20 md:mb-32 px-4 relative">
                         <motion.img
                             src="/avatar_coffee_holding.png"
                             alt="Coffee Time"
-                            className="w-32 h-32 absolute top-0 right-[20%] hidden md:block"
+                            className="w-24 h-24 md:w-32 md:h-32 absolute top-0 right-[10%] md:right-[20%] hidden sm:block"
                             animate={{ y: [0, -10, 0] }}
                             transition={{ duration: 4, repeat: Infinity }}
                         />
-                        <h2 className="text-5xl md:text-7xl font-bold mb-8 text-text">The Journey.</h2>
-                        <p className="text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
+                        <h2 className="text-4xl md:text-7xl font-bold mb-6 md:mb-8 text-text">The Journey.</h2>
+                        <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed px-4">
                             From a single line of code to complex autonomous agents.
                         </p>
                     </div>
@@ -65,30 +65,30 @@ const About = () => {
                 ))}
             </div>
 
-            <section className="py-32 bg-black dark:bg-gray-950 text-white overflow-hidden">
-                <div className="container mx-auto px-6 mb-16 flex items-center gap-6">
-                    <h2 className="text-5xl md:text-7xl font-bold">Achievements.</h2>
+            <section className="py-16 md:py-32 bg-black dark:bg-gray-950 text-white overflow-hidden">
+                <div className="container mx-auto px-4 md:px-6 mb-12 md:mb-16 flex items-center justify-center md:justify-start gap-4 md:gap-6">
+                    <h2 className="text-3xl md:text-5xl lg:text-7xl font-bold">Achievements.</h2>
                     <motion.img
                         src="/avatar_nice.png"
                         alt="Nice"
-                        className="w-24 h-24"
+                        className="w-16 h-16 md:w-24 md:h-24"
                         animate={{ rotate: [0, 15, -15, 0] }}
                         transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                     />
                 </div>
 
-                <div className="flex overflow-x-auto pb-12 px-6 gap-8 snap-x snap-mandatory hide-scrollbar">
+                <div className="flex overflow-x-auto pb-12 px-4 md:px-6 gap-6 md:gap-8 snap-x snap-mandatory hide-scrollbar">
                     {portfolioData.achievements.map((achievement) => (
                         <motion.div
                             key={achievement.id}
                             whileHover={{ scale: 1.02 }}
-                            className="min-w-[350px] md:min-w-[450px] bg-gray-900 dark:bg-gray-800 rounded-3xl p-10 snap-center border border-gray-800 dark:border-gray-700"
+                            className="min-w-[280px] sm:min-w-[350px] md:min-w-[450px] bg-gray-900 dark:bg-gray-800 rounded-2xl md:rounded-3xl p-6 md:p-10 snap-center border border-gray-800 dark:border-gray-700"
                         >
-                            <div className="w-16 h-16 bg-white/10 dark:bg-white/20 rounded-2xl flex items-center justify-center mb-8 text-white">
-                                <achievement.icon size={32} />
+                            <div className="w-12 h-12 md:w-16 md:h-16 bg-white/10 dark:bg-white/20 rounded-xl md:rounded-2xl flex items-center justify-center mb-6 md:mb-8 text-white">
+                                <achievement.icon size={24} className="md:w-8 md:h-8" />
                             </div>
-                            <h3 className="text-3xl font-bold mb-4">{achievement.title}</h3>
-                            <p className="text-gray-400 dark:text-gray-300 text-lg leading-relaxed">
+                            <h3 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">{achievement.title}</h3>
+                            <p className="text-gray-400 dark:text-gray-300 text-base md:text-lg leading-relaxed">
                                 {achievement.description}
                             </p>
                         </motion.div>
@@ -96,31 +96,31 @@ const About = () => {
                 </div>
             </section>
 
-            <section className="py-32 px-4 max-w-7xl mx-auto">
-                <div className="text-center mb-24">
-                    <h2 className="text-5xl md:text-7xl font-bold mb-6 text-text">Featured Work.</h2>
-                    <p className="text-xl text-text-secondary">Innovation in action.</p>
+            <section className="py-16 md:py-32 px-4 max-w-7xl mx-auto">
+                <div className="text-center mb-16 md:mb-24">
+                    <h2 className="text-3xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 text-text">Featured Work.</h2>
+                    <p className="text-lg md:text-xl text-text-secondary">Innovation in action.</p>
                 </div>
 
                 <ProjectShowcase projects={portfolioData.projects} />
             </section>
 
-            <section className="h-screen flex items-center justify-center bg-black dark:bg-gray-950 text-white relative overflow-hidden">
+            <section className="min-h-screen flex items-center justify-center bg-black dark:bg-gray-950 text-white relative overflow-hidden py-20 px-4">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-800 via-black to-black opacity-50" />
-                <div className="relative z-10 text-center flex flex-col items-center">
+                <div className="relative z-10 text-center flex flex-col items-center max-w-4xl mx-auto">
                     <motion.img
                         src="/yesno_avatar.png"
                         alt="Yes or No"
-                        className="w-40 h-40 mb-8"
+                        className="w-32 h-32 md:w-40 md:h-40 mb-6 md:mb-8"
                         animate={{ scale: [1, 1.1, 1] }}
                         transition={{ duration: 2, repeat: Infinity }}
                     />
-                    <h2 className="text-6xl md:text-8xl font-bold mb-12 tracking-tighter">
+                    <h2 className="text-4xl md:text-6xl lg:text-8xl font-bold mb-8 md:mb-12 tracking-tighter">
                         Let's Create.
                     </h2>
                     <a
                         href="mailto:ubheshubham.37@gmail.com"
-                        className="inline-block px-12 py-5 bg-white text-black dark:bg-primary dark:text-white rounded-full text-xl font-medium hover:scale-105 transition-transform duration-300"
+                        className="inline-block px-8 py-4 md:px-12 md:py-5 bg-white text-black dark:bg-primary dark:text-white rounded-full text-lg md:text-xl font-medium hover:scale-105 transition-transform duration-300"
                     >
                         Get in Touch
                     </a>

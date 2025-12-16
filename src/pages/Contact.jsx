@@ -79,24 +79,24 @@ const Contact = () => {
         <div className="relative min-h-screen pt-32 pb-20 overflow-hidden">
             <ContactScene />
 
-            <div className="section-container">
+            <div className="section-container px-4 md:px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-12 text-center"
+                    className="mb-8 md:mb-12 text-center"
                 >
-                    <h2 className="text-5xl font-bold mb-4 text-text">Get In Touch</h2>
-                    <p className="text-text-secondary max-w-2xl mx-auto text-lg leading-relaxed">
+                    <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4 text-text">Get In Touch</h2>
+                    <p className="text-text-secondary max-w-2xl mx-auto text-base md:text-lg leading-relaxed px-4">
                         Let's build something amazing together. Book a time or just say hi!
                     </p>
                 </motion.div>
 
-                <div className="flex justify-center gap-4 mb-12 flex-wrap">
+                <div className="flex justify-center gap-3 md:gap-4 mb-8 md:mb-12 flex-wrap px-4">
                     {['message', 'booking', 'coffee'].map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
-                            className={`px-6 py-2 rounded-full capitalize transition-all ${activeTab === tab
+                            className={`px-4 md:px-6 py-2 rounded-full capitalize transition-all text-sm md:text-base ${activeTab === tab
                                 ? 'bg-primary text-white shadow-lg scale-105'
                                 : 'bg-white dark:bg-surface text-text-secondary hover:bg-gray-100 dark:hover:bg-surface/80'
                                 }`}
@@ -106,33 +106,33 @@ const Contact = () => {
                     ))}
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+                <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-5xl mx-auto">
                     <motion.div
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="glass-panel p-8 h-full flex flex-col justify-center"
+                        className="glass-panel p-6 md:p-8 h-full flex flex-col justify-center"
                     >
-                        <div className="space-y-8">
-                            <a href={`mailto:${portfolioData.personal.email}`} className="flex items-center gap-6 group">
-                                <div className="w-14 h-14 rounded-2xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                                    <Mail size={24} />
+                        <div className="space-y-6 md:space-y-8">
+                            <a href={`mailto:${portfolioData.personal.email}`} className="flex items-center gap-4 md:gap-6 group">
+                                <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 flex-shrink-0">
+                                    <Mail size={20} className="md:w-6 md:h-6" />
                                 </div>
-                                <div>
+                                <div className="min-w-0">
                                     <p className="text-xs text-text-secondary uppercase tracking-widest mb-1">Email</p>
-                                    <p className="font-medium text-xl text-text">{portfolioData.personal.email}</p>
+                                    <p className="font-medium text-base md:text-xl text-text break-all">{portfolioData.personal.email}</p>
                                 </div>
                             </a>
 
-                            <div className="flex items-center gap-6 group">
+                            <div className="flex items-center gap-4 md:gap-6 group">
                                 <motion.div
                                     whileHover={{ scale: 1.1, rotate: 10 }}
-                                    className="w-20 h-20 flex items-center justify-center"
+                                    className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center flex-shrink-0"
                                 >
                                     <img src="/map_avatar.png" alt="Location Avatar" className="w-full h-full object-contain drop-shadow-lg" />
                                 </motion.div>
-                                <div>
+                                <div className="min-w-0">
                                     <p className="text-xs text-text-secondary uppercase tracking-widest mb-1">Location</p>
-                                    <p className="font-medium text-xl text-text">{portfolioData.personal.location}</p>
+                                    <p className="font-medium text-base md:text-xl text-text">{portfolioData.personal.location}</p>
                                 </div>
                             </div>
                         </div>
@@ -143,7 +143,7 @@ const Contact = () => {
                         initial={{ opacity: 0, x: 30 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="glass-panel p-8"
+                        className="glass-panel p-6 md:p-8"
                     >
                         {activeTab === 'message' && (
                             <form className="space-y-6" onSubmit={handleMessage}>
