@@ -15,6 +15,8 @@ const Contact = () => {
     const [formData, setFormData] = useState({ name: '', email: '', message: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [lastBooking, setLastBooking] = useState(null);
+    const [coffeeData, setCoffeeData] = useState({ name: '', email: '', amount: '5', message: '' });
+    const [coffeeStatus, setCoffeeStatus] = useState(null);
 
     const calendlyUrl = import.meta.env.VITE_CALENDLY_URL || 'https://calendly.com/ubheshubham/30min';
 
@@ -99,8 +101,27 @@ const Contact = () => {
         }
     };
 
-    const handleCoffee = () => {
-        window.open('https://www.buymeacoffee.com/shubham', '_blank');
+    const handleCoffee = async (e) => {
+        e.preventDefault();
+        if (isSubmitting) return;
+
+        const { name, email, amount, message } = coffeeData;
+        if (!name || !email || !amount) {
+            setCoffeeStatus({ status: 'error', message: 'Please fill in all required fields' });
+            return;
+        }
+
+        setIsSubmitting(true);
+        const result = await emailService.sendCoffeeNotification({ name, email, amount, message });
+        setCoffeeStatus(result);
+        setIsSubmitting(false);
+
+        if (result.status === 'success') {
+            setTimeout(() => {
+                setCoffeeStatus(null);
+                setCoffeeData({ name: '', email: '', amount: '5', message: '' });
+            }, 3000);
+        }
     };
 
     return (
@@ -344,28 +365,113 @@ const Contact = () => {
                         )}
 
                         {activeTab === 'coffee' && (
-                            <div className="text-center space-y-6 py-8">
-                                <motion.div
-                                    className="w-48 h-48 mx-auto relative"
-                                    animate={{ y: [0, -10, 0] }}
-                                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                                >
-                                    <img src="/coffee_avatar.png" alt="Coffee Avatar" className="w-full h-full object-contain drop-shadow-2xl" />
-                                </motion.div>
-                                <h3 className="text-2xl font-bold text-text">Fuel my creativity!</h3>
-                                <p className="text-text-secondary leading-relaxed">
-                                    If you like my work, consider buying me a coffee. It helps me keep building cool stuff.
-                                </p>
-                                <button
-                                    onClick={handleCoffee}
-                                    className="btn-primary mx-auto flex items-center gap-2"
-                                >
-                                    <Coffee size={20} />
-                                    Buy Me a Coffee
-                                </button>
-                                <p className="text-xs text-text-secondary mt-4">
-                                    You'll be redirected to Buy Me a Coffee
-                                </p>
+                            <div className="space-y-6">
+                                <div className="text-center">
+                                    <motion.div
+                                        className="w-32 h-32 mx-auto relative mb-4"
+                                        animate={{ y: [0, -10, 0] }}
+                                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                                    >
+                                        <img src="/coffee_avatar.png" alt="Coffee Avatar" className="w-full h-full object-contain drop-shadow-2xl" />
+                                    </motion.div>
+                                    <h3 className="text-2xl font-bold text-text flex items-center justify-center gap-2">
+                                        <Coffee className="text-primary" /> Buy Me a Coffee
+                                    </h3>
+                                    <p className="text-text-secondary text-sm mt-2">
+                                        Support my work and fuel my creativity!
+                                    </p>
+                                </div>
+
+                                {coffeeStatus?.status === 'success' ? (
+                                    <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 p-6 rounded-xl flex flex-col items-center gap-4 text-center">
+                                        <motion.img
+                                            src="/avatar_k.png"
+                                            alt="Thank You"
+                                            className="w-32 h-32"
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            transition={{ type: "spring" }}
+                                        />
+                                        <div className="flex items-center gap-2 font-bold text-xl">
+                                            <CheckCircle /> {coffeeStatus.message}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <form className="space-y-4" onSubmit={handleCoffee}>
+                                        <div>
+                                            <label className="block text-sm font-medium text-text mb-2">Name *</label>
+                                            <input
+                                                type="text"
+                                                className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background border border-border focus:border-primary outline-none text-text transition-colors"
+                                                placeholder="Your name"
+                                                value={coffeeData.name}
+                                                onChange={(e) => setCoffeeData({ ...coffeeData, name: e.target.value })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-text mb-2">Email *</label>
+                                            <input
+                                                type="email"
+                                                className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background border border-border focus:border-primary outline-none text-text transition-colors"
+                                                placeholder="your@email.com"
+                                                value={coffeeData.email}
+                                                onChange={(e) => setCoffeeData({ ...coffeeData, email: e.target.value })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-text mb-2">Amount ($) *</label>
+                                            <div className="grid grid-cols-4 gap-2 mb-2">
+                                                {['3', '5', '10', '20'].map((amt) => (
+                                                    <button
+                                                        key={amt}
+                                                        type="button"
+                                                        onClick={() => setCoffeeData({ ...coffeeData, amount: amt })}
+                                                        className={`py-2 px-3 rounded-lg text-sm transition-all ${coffeeData.amount === amt
+                                                            ? 'bg-primary text-white'
+                                                            : 'bg-gray-100 dark:bg-background hover:bg-gray-200 dark:hover:bg-surface text-text'
+                                                        }`}
+                                                    >
+                                                        ${amt}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background border border-border focus:border-primary outline-none text-text transition-colors"
+                                                placeholder="Custom amount"
+                                                value={coffeeData.amount}
+                                                onChange={(e) => setCoffeeData({ ...coffeeData, amount: e.target.value })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-text mb-2">Message (optional)</label>
+                                            <textarea
+                                                rows={3}
+                                                className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background border border-border focus:border-primary outline-none resize-none text-text transition-colors"
+                                                placeholder="Say something nice..."
+                                                value={coffeeData.message}
+                                                onChange={(e) => setCoffeeData({ ...coffeeData, message: e.target.value })}
+                                            />
+                                        </div>
+                                        {coffeeStatus?.status === 'error' && (
+                                            <div className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 p-4 rounded-xl text-center text-sm">
+                                                {coffeeStatus.message}
+                                            </div>
+                                        )}
+                                        <button
+                                            type="submit"
+                                            disabled={isSubmitting}
+                                            className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            {isSubmitting ? 'Processing...' : `Support with $${coffeeData.amount || '0'}`}
+                                            <Coffee size={18} />
+                                        </button>
+                                        <p className="text-xs text-text-secondary text-center mt-2">
+                                            This is a demo form. No actual payment will be processed.
+                                        </p>
+                                    </form>
+                                )}
                             </div>
                         )}
                     </motion.div>
