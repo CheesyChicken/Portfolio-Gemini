@@ -1,22 +1,20 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { portfolioData } from '../data/portfolio';
 import ZoomParallax from '../components/UI/ZoomParallax';
 import AppleScrollSection from '../components/UI/AppleScrollSection';
 import ProjectShowcase from '../components/UI/ProjectShowcase';
-import { Award, Star, Zap } from 'lucide-react';
 
 const About = () => {
     return (
         <div className="bg-background min-h-screen overflow-x-hidden">
 
-            {/* Zoom Hero Section */}
             <ZoomParallax>
-                <div className="relative w-full h-full flex items-center justify-center overflow-hidden bg-black">
+                <div className="relative w-full h-full flex items-center justify-center overflow-hidden bg-black dark:bg-gray-950">
                     <img
                         src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1920"
                         alt="Space Background"
-                        className="absolute inset-0 w-full h-full object-cover opacity-50"
+                        className="absolute inset-0 w-full h-full object-cover opacity-50 dark:opacity-40"
                     />
                     <div className="relative z-10 text-center text-white px-4">
                         <motion.h1
@@ -39,7 +37,6 @@ const About = () => {
                 </div>
             </ZoomParallax>
 
-            {/* Story Sections - Apple Style */}
             <div className="relative z-10 bg-background -mt-[100vh] pt-[100vh]">
                 <div className="py-24">
                     <div className="text-center mb-32 px-4 relative">
@@ -50,8 +47,8 @@ const About = () => {
                             animate={{ y: [0, -10, 0] }}
                             transition={{ duration: 4, repeat: Infinity }}
                         />
-                        <h2 className="text-5xl md:text-7xl font-bold mb-8">The Journey.</h2>
-                        <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+                        <h2 className="text-5xl md:text-7xl font-bold mb-8 text-text">The Journey.</h2>
+                        <p className="text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
                             From a single line of code to complex autonomous agents.
                         </p>
                     </div>
@@ -68,8 +65,7 @@ const About = () => {
                 ))}
             </div>
 
-            {/* Achievements - Horizontal Scroll */}
-            <section className="py-32 bg-black text-white overflow-hidden">
+            <section className="py-32 bg-black dark:bg-gray-950 text-white overflow-hidden">
                 <div className="container mx-auto px-6 mb-16 flex items-center gap-6">
                     <h2 className="text-5xl md:text-7xl font-bold">Achievements.</h2>
                     <motion.img
@@ -86,13 +82,13 @@ const About = () => {
                         <motion.div
                             key={achievement.id}
                             whileHover={{ scale: 1.02 }}
-                            className="min-w-[350px] md:min-w-[450px] bg-gray-900 rounded-3xl p-10 snap-center border border-gray-800"
+                            className="min-w-[350px] md:min-w-[450px] bg-gray-900 dark:bg-gray-800 rounded-3xl p-10 snap-center border border-gray-800 dark:border-gray-700"
                         >
-                            <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-8 text-white">
+                            <div className="w-16 h-16 bg-white/10 dark:bg-white/20 rounded-2xl flex items-center justify-center mb-8 text-white">
                                 <achievement.icon size={32} />
                             </div>
                             <h3 className="text-3xl font-bold mb-4">{achievement.title}</h3>
-                            <p className="text-gray-400 text-lg leading-relaxed">
+                            <p className="text-gray-400 dark:text-gray-300 text-lg leading-relaxed">
                                 {achievement.description}
                             </p>
                         </motion.div>
@@ -100,18 +96,16 @@ const About = () => {
                 </div>
             </section>
 
-            {/* Project Showcase */}
             <section className="py-32 px-4 max-w-7xl mx-auto">
                 <div className="text-center mb-24">
-                    <h2 className="text-5xl md:text-7xl font-bold mb-6">Featured Work.</h2>
-                    <p className="text-xl text-gray-500">Innovation in action.</p>
+                    <h2 className="text-5xl md:text-7xl font-bold mb-6 text-text">Featured Work.</h2>
+                    <p className="text-xl text-text-secondary">Innovation in action.</p>
                 </div>
 
                 <ProjectShowcase projects={portfolioData.projects} />
             </section>
 
-            {/* Footer Call to Action */}
-            <section className="h-screen flex items-center justify-center bg-black text-white relative overflow-hidden">
+            <section className="h-screen flex items-center justify-center bg-black dark:bg-gray-950 text-white relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-800 via-black to-black opacity-50" />
                 <div className="relative z-10 text-center flex flex-col items-center">
                     <motion.img
@@ -126,7 +120,7 @@ const About = () => {
                     </h2>
                     <a
                         href="mailto:ubheshubham.37@gmail.com"
-                        className="inline-block px-12 py-5 bg-white text-black rounded-full text-xl font-medium hover:scale-105 transition-transform duration-300"
+                        className="inline-block px-12 py-5 bg-white text-black dark:bg-primary dark:text-white rounded-full text-xl font-medium hover:scale-105 transition-transform duration-300"
                     >
                         Get in Touch
                     </a>

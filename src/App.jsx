@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Layout/Navbar';
 import Dock from './components/Layout/Dock';
 import Home from './pages/Home';
@@ -33,22 +34,24 @@ const AnimatedRoutes = () => {
 
 function App() {
   return (
-    <Router>
-      <div className="relative min-h-screen bg-background text-text selection:bg-primary selection:text-white cursor-none">
-        <CustomCursor />
+    <ThemeProvider>
+      <Router>
+        <div className="relative min-h-screen bg-background text-text selection:bg-primary selection:text-white cursor-none transition-colors duration-300">
+          <CustomCursor />
 
-        <Navbar />
+          <Navbar />
 
-        <main className="relative z-10">
-          <Suspense fallback={null}>
-            <AnimatedRoutes />
-          </Suspense>
-        </main>
+          <main className="relative z-10">
+            <Suspense fallback={null}>
+              <AnimatedRoutes />
+            </Suspense>
+          </main>
 
-        <GestureController />
-        <Dock />
-      </div>
-    </Router>
+          <GestureController />
+          <Dock />
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 

@@ -9,8 +9,18 @@
   --color-background: #F5F5F7;
   --color-surface: #FFFFFF;
   --color-text: #1D1D1F;
+  --color-text-secondary: #6B7280;
+  --color-border: #E5E7EB;
 
   --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+.dark {
+  --color-background: #0F172A;
+  --color-surface: #1E293B;
+  --color-text: #F1F5F9;
+  --color-text-secondary: #94A3B8;
+  --color-border: #334155;
 }
 
 @layer base {
@@ -25,11 +35,11 @@
 
 @layer components {
   .glass {
-    @apply bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg;
+    @apply bg-white/60 dark:bg-surface/60 backdrop-blur-xl border border-white/40 dark:border-border/40 shadow-lg;
   }
 
   .glass-panel {
-    @apply bg-white/80 backdrop-blur-md border border-white/50 shadow-sm rounded-3xl hover:shadow-xl transition-all duration-500 hover:-translate-y-1;
+    @apply bg-white/80 dark:bg-surface/80 backdrop-blur-md border border-white/50 dark:border-border/50 shadow-sm rounded-3xl hover:shadow-xl transition-all duration-500 hover:-translate-y-1;
   }
 
   .section-container {
@@ -37,15 +47,19 @@
   }
 
   .btn-primary {
-    @apply px-6 py-3 rounded-full bg-black text-white font-medium transition-all duration-300 hover:bg-primary hover:shadow-lg hover:scale-105 active:scale-95;
+    @apply px-6 py-3 rounded-full bg-black dark:bg-primary text-white font-medium transition-all duration-300 hover:bg-primary dark:hover:bg-secondary hover:shadow-lg hover:scale-105 active:scale-95;
   }
 
   .btn-secondary {
-    @apply px-6 py-3 rounded-full bg-white text-text font-medium border border-gray-200 transition-all duration-300 hover:border-primary hover:text-primary hover:shadow-md hover:scale-105 active:scale-95;
+    @apply px-6 py-3 rounded-full bg-white dark:bg-surface text-text font-medium border border-gray-200 dark:border-border transition-all duration-300 hover:border-primary hover:text-primary hover:shadow-md hover:scale-105 active:scale-95;
   }
 
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent;
+  }
+
+  .badge {
+    @apply px-3 py-1 bg-gray-100 dark:bg-surface/80 rounded-full text-xs font-medium text-gray-700 dark:text-text-secondary border border-gray-200 dark:border-border;
   }
 }
 

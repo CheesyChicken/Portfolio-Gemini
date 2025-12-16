@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { portfolioData } from '../../data/portfolio';
+import { ThemeToggle } from '../UI/ThemeToggle';
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -28,23 +29,25 @@ const Navbar = () => {
                 <Link to="/">
                     <motion.div
                         whileHover={{ scale: 1.05 }}
-                        className="text-2xl font-bold text-black cursor-pointer tracking-tighter"
+                        className="text-2xl font-bold text-text cursor-pointer tracking-tighter"
                     >
                         {portfolioData.personal.name}
                     </motion.div>
                 </Link>
 
-                <div className="hidden md:flex space-x-8">
+                <div className="hidden md:flex space-x-8 items-center">
                     {portfolioData.dockItems.map((item) => (
                         <Link
                             key={item.id}
                             to={item.to}
-                            className={`text-sm font-medium transition-colors uppercase tracking-widest ${location.pathname === item.to ? 'text-black border-b-2 border-black' : 'text-gray-500 hover:text-black'
+                            className={`text-sm font-medium transition-colors uppercase tracking-widest ${location.pathname === item.to ? 'text-text border-b-2 border-primary' : 'text-text-secondary hover:text-text'
                                 }`}
                         >
                             {item.label}
                         </Link>
                     ))}
+                    
+                    <ThemeToggle />
                 </div>
 
                 <motion.a
