@@ -128,8 +128,9 @@ const Interactive = () => {
                 </Canvas>
             </div>
 
-            {/* UI Layer */}
-            <div className="absolute inset-0 z-10 pointer-events-none flex flex-col justify-between p-6">
+                {/* UI Layer */}
+                <div className="absolute inset-0 z-10 flex flex-col justify-between p-6">
+
 
                 {/* Top Bar */}
                 <header className="flex justify-between items-start pointer-events-auto">
