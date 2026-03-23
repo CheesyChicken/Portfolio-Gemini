@@ -11,6 +11,10 @@ dist
 build
 
 # Misc
+.git
+.cache
+**/.cache
+data
 .DS_Store
 .env
 .env.local

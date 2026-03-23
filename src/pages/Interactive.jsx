@@ -66,12 +66,13 @@ const Interactive = () => {
     }, []);
 
     const shapes = [
-        { type: ParticleShapeType.HEART, icon: Heart, label: 'Heart' },
-        { type: ParticleShapeType.FLOWER, icon: Flower, label: 'Flower' },
-        { type: ParticleShapeType.SATURN, icon: Globe, label: 'Saturn' },
-        { type: ParticleShapeType.BUDDHA, icon: User, label: 'Spirit' },
-        { type: ParticleShapeType.FIREWORKS, icon: Zap, label: 'Fireworks' },
+        { type: ParticleShapeType.HEART, emoji: '❤️', label: 'Heart' },
+        { type: ParticleShapeType.FLOWER, emoji: '🌸', label: 'Flower' },
+        { type: ParticleShapeType.SATURN, emoji: '🪐', label: 'Saturn' },
+        { type: ParticleShapeType.BUDDHA, emoji: '🧘', label: 'Spirit' },
+        { type: ParticleShapeType.FIREWORKS, emoji: '🎆', label: 'Fireworks' },
     ];
+
 
     // Morph to Text Logic
     const morphToText = (newText) => {
@@ -132,6 +133,8 @@ const Interactive = () => {
             }
         }
     }, [handPresent, shapes]);
+
+
 
     // Reset camera position when gesture mode is toggled off
     useEffect(() => {
@@ -278,10 +281,10 @@ const Interactive = () => {
             {/* 3D Viewport */}
             <div className="absolute inset-0 z-0">
                 <Canvas camera={{ position: [0, 0, 30], fov: 45 }}>
-                    <CosmicScene 
-                        shape={shape} 
-                        color={color} 
-                        expansion={expansion} 
+                    <CosmicScene
+                        shape={shape}
+                        color={color}
+                        expansion={expansion}
                         text={text}
                         cameraPosition={cameraPosition}
                         cameraRotation={cameraRotation}
@@ -290,24 +293,25 @@ const Interactive = () => {
                 </Canvas>
             </div>
 
-                {/* UI Layer */}
-                <div className="absolute inset-0 z-10 flex flex-col justify-between p-6">
+            {/* UI Layer */}
+            <div className="absolute inset-0 z-10 flex flex-col justify-between p-6 pointer-events-none">
 
 
-                  {/* Top Bar */}
-                  <header className="flex justify-between items-start pointer-events-none">
-                        <div>
-                            <h1 className="text-3xl font-bold text-white drop-shadow-lg tracking-tighter">
-                                AURA <span className="text-indigo-400">PARTICLES</span>
-                            </h1>
-                            <p className="text-gray-400 text-xs mt-1">Interactive Generative System</p>
-                            <div className="text-[10px] text-gray-500 mt-2 space-y-0.5">
-                                <div>🖱️ Drag: Pan • Scroll/Pinch: Zoom</div>
-                                <div>⇧ Shift+Drag: Expansion</div>
-                                <div>⌘ Ctrl+Scroll: Expansion</div>
-                            </div>
+
+                {/* Top Bar */}
+                <header className="flex justify-between items-start pointer-events-none">
+                    <div>
+                        <h1 className="text-3xl font-bold text-white drop-shadow-lg tracking-tighter">
+                            AURA <span className="text-indigo-400">PARTICLES</span>
+                        </h1>
+                        <p className="text-gray-400 text-xs mt-1">Interactive Generative System</p>
+                        <div className="text-[10px] text-gray-500 mt-2 space-y-0.5">
+                            <div>🖱️ Drag: Pan • Scroll/Pinch: Zoom</div>
+                            <div>⇧ Shift+Drag: Expansion</div>
+                            <div>⌘ Ctrl+Scroll: Expansion</div>
                         </div>
-                  </header>
+                    </div>
+                </header>
 
                 {/* Main Controls Overlay */}
                 <div className="flex-1 flex items-center justify-between pointer-events-none mt-8">
@@ -324,7 +328,8 @@ const Interactive = () => {
                                         : 'text-gray-400 hover:bg-white/10 hover:text-white'
                                         }`}
                                 >
-                                    <s.icon size={20} />
+                                    <span className="text-xl filter drop-shadow-lg">{s.emoji}</span>
+
 
                                     {/* Tooltip */}
                                     <span className="absolute left-14 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -335,23 +340,23 @@ const Interactive = () => {
                         </div>
                     </div>
 
-                      {/* Right Sidebar Group */}
-                      <div className="flex flex-col gap-4 pointer-events-auto">
+                    {/* Right Sidebar Group */}
+                    <div className="flex flex-col gap-4 pointer-events-auto">
 
-                          {/* Gesture Toggle */}
-                          <button
-                              onClick={() => setGestureMode(!gestureMode)}
-                              className={`p-3 rounded-2xl font-medium text-sm transition-all border flex items-center justify-center gap-2 backdrop-blur-xl shadow-2xl ${gestureMode
-                                  ? 'bg-red-500/20 border-red-500 text-red-200 shadow-[0_0_15px_rgba(239,68,68,0.3)]'
-                                  : 'bg-black/40 border-white/10 text-white hover:bg-white/20'
-                                  }`}
-                          >
-                              {gestureMode ? <VideoOff size={18} /> : <Video size={18} />}
-                              <span className="text-xs">{gestureMode ? 'OFF' : 'ON'}</span>
-                          </button>
+                        {/* Gesture Toggle */}
+                        <button
+                            onClick={() => setGestureMode(!gestureMode)}
+                            className={`p-3 rounded-2xl font-medium text-sm transition-all border flex items-center justify-center gap-2 backdrop-blur-xl shadow-2xl ${gestureMode
+                                ? 'bg-red-500/20 border-red-500 text-red-200 shadow-[0_0_15px_rgba(239,68,68,0.3)]'
+                                : 'bg-black/40 border-white/10 text-white hover:bg-white/20'
+                                }`}
+                        >
+                            {gestureMode ? <VideoOff size={18} /> : <Video size={18} />}
+                            <span className="text-xs">{gestureMode ? 'OFF' : 'ON'}</span>
+                        </button>
 
-                          {/* Search Bar (Morph to Text) */}
-                          <div className="bg-black/40 backdrop-blur-xl border border-white/10 p-2 rounded-2xl flex items-center gap-2 shadow-2xl">
+                        {/* Search Bar (Morph to Text) */}
+                        <div className="bg-black/40 backdrop-blur-xl border border-white/10 p-2 rounded-2xl flex items-center gap-2 shadow-2xl">
                             <input
                                 type="text"
                                 value={inputText}
@@ -405,8 +410,8 @@ const Interactive = () => {
                                         }}
                                         disabled={gestureMode}
                                         className={`h-full w-1.5 rounded-lg appearance-none cursor-pointer transition-all -rotate-180 writing-mode-vertical ${gestureMode
-                                                ? 'bg-indigo-900/50 accent-indigo-500 cursor-not-allowed'
-                                                : 'bg-gray-700 hover:bg-gray-600 accent-white'
+                                            ? 'bg-indigo-900/50 accent-indigo-500 cursor-not-allowed'
+                                            : 'bg-gray-700 hover:bg-gray-600 accent-white'
                                             }`}
                                         style={{ writingMode: 'vertical-lr', direction: 'rtl' }}
                                     />

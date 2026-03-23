@@ -11,6 +11,7 @@ import Experience from './pages/Experience';
 import Contact from './pages/Contact';
 import Interactive from './pages/Interactive';
 import Life from './pages/Life';
+import Certifications from './pages/Certifications';
 import CustomCursor from './components/UI/CustomCursor';
 
 const AnimatedRoutes = () => {
@@ -26,6 +27,7 @@ const AnimatedRoutes = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/interactive" element={<Interactive />} />
         <Route path="/life" element={<Life />} />
+        <Route path="/certifications" element={<Certifications />} />
       </Routes>
     </AnimatePresence>
   );
@@ -40,13 +42,17 @@ function App() {
 
           <Navbar />
 
-            <main className="relative z-10">
-              <Suspense fallback={null}>
-                <AnimatedRoutes />
-              </Suspense>
-            </main>
+          <main className="relative z-10">
+            <Suspense fallback={
+              <div className="flex items-center justify-center min-h-screen">
+                <div className="text-xl font-medium text-primary animate-pulse">Loading...</div>
+              </div>
+            }>
+              <AnimatedRoutes />
+            </Suspense>
+          </main>
 
-            <Dock />
+          <Dock />
         </div>
       </Router>
     </ThemeProvider>

@@ -280,11 +280,14 @@ export const CosmicScene = ({ shape, color, expansion, text = "AURA", cameraPosi
                 positions[iz] += (tz - positions[iz]) * speed;
 
                 // Add slight noise/jitter for "life"
+                // Add slight noise/jitter for "life"
                 if (expansion > 0.5) {
                     positions[ix] += (Math.random() - 0.5) * 0.05;
                     positions[iy] += (Math.random() - 0.5) * 0.05;
                     positions[iz] += (Math.random() - 0.5) * 0.05;
                 }
+
+
             }
         }
 
@@ -331,11 +334,11 @@ export const CosmicScene = ({ shape, color, expansion, text = "AURA", cameraPosi
             </group>
 
             {!gestureMode && (
-                <OrbitControls 
-                    enableZoom={true} 
-                    enablePan={true} 
-                    autoRotate={true} 
-                    autoRotateSpeed={0.5} 
+                <OrbitControls
+                    enableZoom={true}
+                    enablePan={true}
+                    autoRotate={true}
+                    autoRotateSpeed={0.5}
                 />
             )}
         </>

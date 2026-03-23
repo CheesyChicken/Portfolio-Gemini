@@ -169,14 +169,50 @@ const Life = () => {
         <div className="bg-black min-h-screen text-white">
             <MapNavigation activeSection={activeSection} />
 
-            {/* Intro */}
-            <div className="h-screen flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('/instagram_images/midnight_dream.jpg')] bg-cover bg-center opacity-30 blur-sm scale-110" />
-                <div className="z-10 text-center">
-                    <h1 className="text-8xl md:text-[12rem] font-black tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
+            {/* Intro Collage */}
+            <div className="h-screen flex items-center justify-center relative overflow-hidden bg-black">
+                {/* Collage Grid */}
+                <div className="absolute inset-0 grid grid-cols-3 gap-1 opacity-60">
+                    <div className="relative h-full overflow-hidden bg-neutral-900">
+                        <img
+                            src="/instagram_images/rajasthan_1.jpg"
+                            alt="Rajasthan"
+                            className="w-full h-full object-cover animate-pulse-slow"
+                        />
+                    </div>
+                    <div className="relative h-full overflow-hidden bg-neutral-900 flex flex-col gap-1">
+                        <div className="h-1/2 relative overflow-hidden">
+                            <img
+                                src="/instagram_images/snow_1.jpg"
+                                alt="Snow"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                        <div className="h-1/2 relative overflow-hidden">
+                            <img
+                                src="/instagram_images/ghibli.jpg"
+                                alt="Ghibli Vibes"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    </div>
+                    <div className="relative h-full overflow-hidden bg-neutral-900">
+                        <img
+                            src="/instagram_images/midnight.jpg"
+                            alt="Midnight"
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                </div>
+
+                {/* Gradient Overlay for Text Readability */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/80" />
+
+                <div className="z-10 text-center mix-blend-overlay">
+                    <h1 className="text-8xl md:text-[12rem] font-black tracking-tighter mb-4 text-white">
                         LIFE
                     </h1>
-                    <p className="text-xl md:text-2xl font-light tracking-[1em] uppercase text-white/80">
+                    <p className="text-xl md:text-2xl font-light tracking-[1em] uppercase text-white">
                         The Journey
                     </p>
                 </div>
@@ -188,6 +224,7 @@ const Life = () => {
                     <div className="w-px h-24 bg-gradient-to-b from-white/0 via-white to-white/0" />
                 </motion.div>
             </div>
+
 
             {/* Sections */}
             {portfolioData.lifeLocations.map((location) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { portfolioData } from '../data/portfolio';
@@ -8,28 +8,53 @@ import HomeScene from '../components/3d/HomeScene';
 const Home = () => {
     return (
         <div className="relative min-h-screen pt-20 pb-32 overflow-hidden">
-            <HomeScene />
+            <Suspense fallback={null}>
+                <HomeScene />
+            </Suspense>
 
             <div className="section-container flex flex-col justify-center">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
-                    className="mb-12 max-w-3xl relative"
+                    className="mb-12 max-w-5xl relative flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12"
                 >
-                    <h2 className="text-primary font-semibold mb-3 tracking-wide uppercase text-sm md:text-base">
-                        {portfolioData.personal.title}
-                    </h2>
-                    <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-                        Hello, I'm <br />
-                        <span className="text-gradient">
-                            {portfolioData.personal.name}
-                        </span>
-                    </h1>
-                    <p className="text-xl md:text-2xl text-text-secondary leading-relaxed">
-                        {portfolioData.personal.bio}
-                    </p>
+                    <div className="flex-1">
+                        <h2 className="text-primary font-semibold mb-3 tracking-wide uppercase text-sm md:text-base">
+                            {portfolioData.personal.title}
+                        </h2>
+                        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                            Hello, I'm <br />
+                            <span className="text-gradient">
+                                {portfolioData.personal.name}
+                            </span>
+                        </h1>
+                        <p className="text-xl md:text-2xl text-text-secondary leading-relaxed">
+                            {portfolioData.personal.bio}
+                        </p>
+                    </div>
+
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.2, duration: 0.8 }}
+                        className="w-48 h-48 md:w-80 md:h-80 flex-shrink-0 relative group"
+                    >
+                        {/* Aesthetic Shade / Glow */}
+                        <div className="absolute -inset-4 bg-gradient-to-br from-primary/30 to-secondary/30 rounded-[2rem] blur-xl opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                        {/* Image Container with Squircle Shape */}
+                        <div className="relative w-full h-full rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl rotate-3 group-hover:rotate-0 transition-transform duration-500">
+                            <img
+                                src="/avatar_thumbsup.png"
+                                alt={portfolioData.personal.name}
+                                className="w-full h-full object-cover transform scale-105 group-hover:scale-110 transition-transform duration-700"
+                            />
+                        </div>
+                    </motion.div>
+
                 </motion.div>
+
 
 
 

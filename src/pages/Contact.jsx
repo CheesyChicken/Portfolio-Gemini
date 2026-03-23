@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { portfolioData } from '../data/portfolio';
 import { Mail, MapPin, Send, Calendar, Clock, Coffee, CheckCircle } from 'lucide-react';
+import { InlineWidget } from 'react-calendly';
+
 import ContactScene from '../components/3d/ContactScene';
 import { bookingService } from '../services/bookingService';
 import { emailService } from '../services/emailService';
@@ -67,20 +69,18 @@ const Contact = () => {
             setLastBooking(null);
         }
         setIsSubmitting(false);
-        
+
         if (result.status === 'success') {
-            setTimeout(() => {
-                setBookingStatus(null);
-                setFormData({ name: '', email: '', message: '' });
-                setSelectedSlot(null);
-            }, 3000);
+            // No auto-dismissal
+            // form data reset is optional, keeping it here so if they go back it's clean, 
+            // but for now let's just keep status.
         }
     };
 
     const handleMessage = async (e) => {
         e.preventDefault();
         if (isSubmitting) return;
-        
+
         const name = e.target[0].value;
         const email = e.target[1].value;
         const message = e.target[2].value;
@@ -97,7 +97,7 @@ const Contact = () => {
 
         if (result.status === 'success') {
             e.target.reset();
-            setTimeout(() => setMessageStatus(null), 3000);
+            // timeouts removed 
         }
     };
 
@@ -116,12 +116,7 @@ const Contact = () => {
         setCoffeeStatus(result);
         setIsSubmitting(false);
 
-        if (result.status === 'success') {
-            setTimeout(() => {
-                setCoffeeStatus(null);
-                setCoffeeData({ name: '', email: '', amount: '5', message: '' });
-            }, 3000);
-        }
+        // No auto-dismissal
     };
 
     return (
@@ -141,22 +136,22 @@ const Contact = () => {
                 </motion.div>
 
                 <div className="flex justify-center gap-3 md:gap-4 mb-8 md:mb-12 flex-wrap px-4">
-                              {['message', 'booking', 'coffee'].map((tab) => (
-                                  <button
-                                      key={tab}
-                                      onClick={() => setActiveTab(tab)}
-                                      className={`px-4 md:px-6 py-2 rounded-full capitalize transition-all text-sm md:text-base ${activeTab === tab
-                                          ? 'bg-primary text-white shadow-lg scale-105'
-                                          : 'bg-white dark:bg-surface text-text-secondary hover:bg-gray-100 dark:hover:bg-surface/80'
-                                          }`}
-                                  >
-                                      {tab === 'coffee'
-                                          ? 'Buy Me a Coffee'
-                                          : tab === 'message'
-                                              ? 'Message'
-                                              : 'Booking'}
-                                  </button>
-                              ))}
+                    {['message', 'booking', 'coffee'].map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            className={`px-4 md:px-6 py-2 rounded-full capitalize transition-all text-sm md:text-base ${activeTab === tab
+                                ? 'bg-primary text-white shadow-lg scale-105'
+                                : 'bg-white dark:bg-surface text-text-secondary hover:bg-gray-100 dark:hover:bg-surface/80'
+                                }`}
+                        >
+                            {tab === 'coffee'
+                                ? 'Buy Me a Coffee'
+                                : tab === 'message'
+                                    ? 'Message'
+                                    : 'Booking'}
+                        </button>
+                    ))}
 
                 </div>
 
@@ -203,26 +198,26 @@ const Contact = () => {
                             <form className="space-y-6" onSubmit={handleMessage}>
                                 <div className="group">
                                     <label className="block text-sm font-medium text-text mb-2">Name</label>
-                                    <input 
-                                        type="text" 
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background border border-border focus:border-primary outline-none text-text transition-colors" 
-                                        placeholder="John Doe" 
+                                    <input
+                                        type="text"
+                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background border border-border focus:border-primary outline-none text-text transition-colors"
+                                        placeholder="John Doe"
                                     />
                                 </div>
                                 <div className="group">
                                     <label className="block text-sm font-medium text-text mb-2">Email</label>
-                                    <input 
-                                        type="email" 
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background border border-border focus:border-primary outline-none text-text transition-colors" 
-                                        placeholder="john@example.com" 
+                                    <input
+                                        type="email"
+                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background border border-border focus:border-primary outline-none text-text transition-colors"
+                                        placeholder="john@example.com"
                                     />
                                 </div>
                                 <div className="group">
                                     <label className="block text-sm font-medium text-text mb-2">Message</label>
-                                    <textarea 
-                                        rows={4} 
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background border border-border focus:border-primary outline-none resize-none text-text transition-colors" 
-                                        placeholder="Your message..." 
+                                    <textarea
+                                        rows={4}
+                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background border border-border focus:border-primary outline-none resize-none text-text transition-colors"
+                                        placeholder="Your message..."
                                     />
                                 </div>
                                 {messageStatus && (
@@ -230,7 +225,7 @@ const Contact = () => {
                                         {messageStatus.message}
                                     </div>
                                 )}
-                                <button 
+                                <button
                                     type="submit"
                                     disabled={isSubmitting}
                                     className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -241,128 +236,24 @@ const Contact = () => {
                         )}
 
                         {activeTab === 'booking' && (
-                            <div className="space-y-6">
-                                <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-text">
-                                    <Calendar className="text-primary" /> Book a Slot
-                                </h3>
-
-                                  {bookingStatus?.status === 'success' ? (
-                                      <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 p-6 rounded-xl flex flex-col items-center gap-4 text-center">
-                                          <motion.img
-                                              src="/avatar_k.png"
-                                              alt="OK"
-                                              className="w-32 h-32"
-                                              initial={{ scale: 0 }}
-                                              animate={{ scale: 1 }}
-                                              transition={{ type: "spring" }}
-                                          />
-                                          <div className="flex items-center gap-2 font-bold text-xl">
-                                              <CheckCircle /> {bookingStatus.message}
-                                          </div>
-                                          {lastBooking && (
-                                              <div className="w-full flex flex-col gap-3">
-                                                  <p className="text-sm text-text-secondary text-center">
-                                                      Reserved for {new Date(lastBooking.date).toLocaleDateString()} at {lastBooking.time}
-                                                  </p>
-                                                  <div className="flex flex-wrap justify-center gap-3">
-                                                      {buildGoogleCalendarLink(lastBooking) && (
-                                                          <a
-                                                              href={buildGoogleCalendarLink(lastBooking)}
-                                                              target="_blank"
-                                                              rel="noopener noreferrer"
-                                                              className="btn-primary px-4 py-2 text-sm"
-                                                          >
-                                                              Add to Google Calendar
-                                                          </a>
-                                                      )}
-                                                      <a
-                                                          href={calendlyUrl}
-                                                          target="_blank"
-                                                          rel="noopener noreferrer"
-                                                          className="px-4 py-2 rounded-xl border border-primary/40 text-primary bg-primary/10 hover:bg-primary/20 transition-colors text-sm"
-                                                      >
-                                                          Open Calendly
-                                                      </a>
-                                                  </div>
-                                              </div>
-                                          )}
-                                      </div>
-                                  ) : bookingStatus?.status === 'error' ? (
-
-                                    <div className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 p-6 rounded-xl flex flex-col items-center gap-4 text-center">
-                                        <motion.img
-                                            src="/avatar_oops.png"
-                                            alt="Oops"
-                                            className="w-32 h-32"
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            transition={{ type: "spring" }}
-                                        />
-                                        <div className="flex items-center gap-2 font-bold text-xl">
-                                            {bookingStatus.message}
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <div>
-                                            <label className="block text-sm font-medium text-text mb-2">Select Date</label>
-                                            <input
-                                                type="date"
-                                                className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background border border-border focus:border-primary outline-none text-text transition-colors"
-                                                value={selectedDate.toISOString().split('T')[0]}
-                                                onChange={(e) => setSelectedDate(new Date(e.target.value))}
-                                                min={new Date().toISOString().split('T')[0]}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-text mb-2">Available Slots</label>
-                                            <div className="grid grid-cols-3 gap-2">
-                                                {availableSlots.map(slot => (
-                                                    <button
-                                                        key={slot}
-                                                        type="button"
-                                                        onClick={() => setSelectedSlot(slot)}
-                                                        className={`py-2 px-3 rounded-lg text-sm transition-all ${selectedSlot === slot
-                                                            ? 'bg-primary text-white'
-                                                            : 'bg-gray-100 dark:bg-background hover:bg-gray-200 dark:hover:bg-surface text-text'
-                                                            }`}
-                                                    >
-                                                        {slot}
-                                                    </button>
-                                                ))}
-                                                {availableSlots.length === 0 && <p className="text-sm text-text-secondary col-span-3">No slots available.</p>}
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-4 pt-4 border-t border-border">
-                                            <input
-                                                type="text"
-                                                placeholder="Your Name"
-                                                className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background border border-border focus:border-primary outline-none text-text transition-colors"
-                                                value={formData.name}
-                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            />
-                                            <input
-                                                type="email"
-                                                placeholder="Your Email"
-                                                className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background border border-border focus:border-primary outline-none text-text transition-colors"
-                                                value={formData.email}
-                                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={handleBooking}
-                                                disabled={!selectedSlot || !formData.name || !formData.email || isSubmitting}
-                                                className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                                            >
-                                                {isSubmitting ? 'Booking...' : 'Confirm Booking'} <Clock size={18} />
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
+                            <div className="h-[600px] w-full overflow-hidden rounded-2xl bg-white dark:bg-neutral-900 border border-border">
+                                <InlineWidget
+                                    url={calendlyUrl}
+                                    styles={{
+                                        height: '100%',
+                                        width: '100%'
+                                    }}
+                                    pageSettings={{
+                                        backgroundColor: '111827',
+                                        hideEventTypeDetails: false,
+                                        hideLandingPageDetails: false,
+                                        primaryColor: '3b82f6',
+                                        textColor: 'ffffff'
+                                    }}
+                                />
                             </div>
                         )}
+
 
                         {activeTab === 'coffee' && (
                             <div className="space-y-6">
@@ -383,18 +274,33 @@ const Contact = () => {
                                 </div>
 
                                 {coffeeStatus?.status === 'success' ? (
-                                    <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 p-6 rounded-xl flex flex-col items-center gap-4 text-center">
-                                        <motion.img
-                                            src="/avatar_k.png"
-                                            alt="Thank You"
-                                            className="w-32 h-32"
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            transition={{ type: "spring" }}
-                                        />
-                                        <div className="flex items-center gap-2 font-bold text-xl">
-                                            <CheckCircle /> {coffeeStatus.message}
+                                    <div className="bg-white dark:bg-surface border border-border p-6 rounded-xl flex flex-col items-center gap-4 text-center">
+                                        <div className="w-48 h-48 bg-white p-2 rounded-xl shadow-lg">
+                                            <img
+                                                src="/upi_qr.png"
+                                                alt="UPI QR Code"
+                                                className="w-full h-full object-contain"
+                                            />
                                         </div>
+                                        <div className="space-y-2">
+                                            <h4 className="font-bold text-xl text-text">Scan to Pay ₹{coffeeData.amount * 85}</h4>
+                                            <p className="text-sm text-text-secondary">or use UPI ID</p>
+                                            <div className="bg-gray-100 dark:bg-neutral-800 px-4 py-2 rounded-lg font-mono text-sm text-primary select-all">
+                                                ubheshubham.37@okhdfcbank
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-green-600 font-medium mt-2">
+                                            <CheckCircle size={18} /> Pledge sent! Complete payment above.
+                                        </div>
+                                        <button
+                                            onClick={() => {
+                                                setCoffeeStatus(null);
+                                                setCoffeeData({ name: '', email: '', amount: '5', message: '' });
+                                            }}
+                                            className="text-sm text-text-secondary hover:text-primary underline mt-4"
+                                        >
+                                            Back to Payment
+                                        </button>
                                     </div>
                                 ) : (
                                     <form className="space-y-4" onSubmit={handleCoffee}>
@@ -429,7 +335,7 @@ const Contact = () => {
                                                         className={`py-2 px-3 rounded-lg text-sm transition-all ${coffeeData.amount === amt
                                                             ? 'bg-primary text-white'
                                                             : 'bg-gray-100 dark:bg-background hover:bg-gray-200 dark:hover:bg-surface text-text'
-                                                        }`}
+                                                            }`}
                                                     >
                                                         ${amt}
                                                     </button>
